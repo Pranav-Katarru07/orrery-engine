@@ -4,6 +4,7 @@
 const TYPE_LABEL = {
   star: 'Star', planet: 'Planet', dwarf: 'Dwarf planet',
   moon: 'Moon', comet: 'Comet', mission: 'Mission',
+  asteroid: 'Asteroid', kbo: 'KBO',
 };
 
 export class Search {

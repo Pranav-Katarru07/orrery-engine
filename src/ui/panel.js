@@ -27,10 +27,12 @@ function returnPeriodLabel(periodDays) {
 const TAB3_TITLE = {
   star: 'Star', planet: 'Planet', dwarf: 'Dwarf Planet',
   moon: 'Moon', comet: 'Comet', mission: 'Mission',
+  asteroid: 'Asteroid', kbo: 'Object',
 };
 const TYPE_LABEL = {
   star: 'Star', planet: 'Planet', dwarf: 'Dwarf planet',
   moon: 'Moon', comet: 'Comet', mission: 'Spacecraft',
+  asteroid: 'Asteroid', kbo: 'Kuiper Belt object',
 };
 
 const fmtWaypoint = new Intl.DateTimeFormat('en-GB', {

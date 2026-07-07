@@ -10,6 +10,7 @@ import { DWARF_CONTENT } from './dwarfs.js';
 import { MOON_CONTENT } from './moons.js';
 import { COMET_CONTENT } from './comets.js';
 import { MISSION_CONTENT } from './missions.js';
+import { ASTEROID_CONTENT } from './asteroids.js';
 
 const REGISTRY = {
   ...SUN_CONTENT,
@@ -18,6 +19,7 @@ const REGISTRY = {
   ...MOON_CONTENT,
   ...COMET_CONTENT,
   ...MISSION_CONTENT,
+  ...ASTEROID_CONTENT,
 };
 
 export function getContent(id, def) {

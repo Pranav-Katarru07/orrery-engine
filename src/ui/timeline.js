@@ -32,7 +32,7 @@ export class Timeline {
         </div>
         <div class="tl-speed">
           <button class="tl-btn small" data-a="slower" title="Slower">${ic.minus}</button>
-          <span class="speed-label"></span>
+          <span class="speed-label" title="Click to reset to real time"></span>
           <button class="tl-btn small" data-a="faster" title="Faster">${ic.plus}</button>
           <button class="tl-now" data-a="now">Now</button>
         </div>
@@ -68,6 +68,11 @@ export class Timeline {
     el.querySelector('[data-a="play"]').addEventListener('click', () => clock.togglePlay());
     el.querySelector('[data-a="rev"]').addEventListener('click', () => {
       clock.direction *= -1;
+      this.render();
+    });
+    this.$speed.addEventListener('click', () => {
+      clock.setSpeedIndex(0);
+      clock.direction = 1;
       this.render();
     });
     el.querySelector('[data-a="slower"]').addEventListener('click', () => clock.setSpeedIndex(clock.speedIndex - 1));

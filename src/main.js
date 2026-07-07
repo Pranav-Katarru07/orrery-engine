@@ -34,11 +34,15 @@ const ALL_TARGETS = [
 ];
 const defOf = (id) => CATALOG.get(id) ?? MISSION_DEFS.get(id);
 
-// largest moon orbit per parent, for label/orbit context rules
+// largest moon orbit per parent, for label/orbit context rules — capped so
+// far-flung irregulars (Phoebe, Nereid) don't make a system's moon labels
+// pop in from across the solar system
+const EXTENT_CAP_KM = 2e6;
 const systemExtentKm = new Map();
 for (const b of BODIES) {
   if (b.type === 'moon' && b.moonDistKm) {
-    systemExtentKm.set(b.parent, Math.max(systemExtentKm.get(b.parent) ?? 0, b.moonDistKm));
+    const d = Math.min(b.moonDistKm, EXTENT_CAP_KM);
+    systemExtentKm.set(b.parent, Math.max(systemExtentKm.get(b.parent) ?? 0, d));
   }
 }
 
