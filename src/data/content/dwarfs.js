@@ -231,6 +231,18 @@ export const DWARF_CONTENT = {
         ],
       },
       {
+        id: 'moons',
+        title: 'Moons',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Eris has one known moon, Dysnomia — large enough that the pair are mutually tidally locked, a far-flung echo of the Pluto–Charon binary.',
+          },
+          { type: 'moons' },
+        ],
+      },
+      {
         id: 'funfacts',
         title: 'Fun Facts',
         blocks: [
