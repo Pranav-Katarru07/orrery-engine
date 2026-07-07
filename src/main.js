@@ -4,6 +4,7 @@ import { AU_KM, clamp, daysSinceJ2000 } from './consts.js';
 import { BODIES, CATALOG, childrenOf } from './data/bodies.js';
 import { MISSIONS, MissionSet } from './data/missions.js';
 import { Ephemeris } from './sim/ephemeris.js';
+import { elementsToPosition } from './sim/kepler.js';
 import { SimClock } from './sim/time.js';
 import { ScaleManager } from './render/scale.js';
 import { createStage } from './core/scene.js';
@@ -56,6 +57,23 @@ const hidden = new Set(); // unlaunched missions
 const tmpA = { x: 0, y: 0, z: 0 };
 const tmpV = new THREE.Vector3();
 
+// Orbital-velocity direction per comet (scene space), for the dust-tail lag.
+// Computed from the elements directly so the ephemeris frame cache stays hot.
+const COMETS = BODIES.filter((b) => b.type === 'comet');
+const cometVel = new Map(COMETS.map((c) => [c.id, new THREE.Vector3()]));
+const velA = new THREE.Vector3();
+const velB = new THREE.Vector3();
+
+function computeCometVelocities(ms) {
+  for (const def of COMETS) {
+    scale.mapHelio(elementsToPosition(def.elements, ms), velA);
+    scale.mapHelio(elementsToPosition(def.elements, ms + 36e5), velB);
+    const v = cometVel.get(def.id);
+    v.copy(velB).sub(velA);
+    if (v.lengthSq() > 1e-18) v.normalize();
+  }
+}
+
 function computePositions(ms) {
   hidden.clear();
   for (const def of BODIES) {
@@ -96,6 +114,8 @@ let selectedId = null;
 const panel = new Panel(ui, {
   onSelect: (id) => select(id),
   onClose: () => deselect(),
+  getSimMs: () => clock.ms,
+  onJumpToDate: (ms) => clock.set(ms),
 });
 
 function select(id) {
@@ -107,7 +127,9 @@ function select(id) {
   orbits.setFocusParent(def.type === 'moon' ? def.parent : childrenOf(id).length ? id : null);
   labels.setSelection(id);
   labels.setAccent(def.accent.glow);
-  rig.flyTo(id, getBodyForRig);
+  // comets are framed from far outside their coma so the tails read as a
+  // vista; everything else gets the close three-quarter portrait
+  rig.flyTo(id, getBodyForRig, def.type === 'comet' ? 700 : 4.6, def.type === 'comet');
 
   const parentDef = def.parent && def.parent !== 'sun' ? CATALOG.get(def.parent) : null;
   const moons = childrenOf(id).map((m) => ({ id: m.id, name: m.name, radiusKm: m.radiusKm }));
@@ -191,12 +213,16 @@ function frame(now) {
   clock.tick(dt);
   scale.tick(now);
   computePositions(clock.ms);
+  computeCometVelocities(clock.ms);
 
   rig.update(dt, getBodyForRig);
   const camPos = rig.pos;
 
   for (const def of BODIES) {
-    bodies.update(def.id, world.get(def.id), camPos, scale.radius(def.radiusKm), clock.ms, sunWorld);
+    bodies.update(
+      def.id, world.get(def.id), camPos, scale.radius(def.radiusKm),
+      clock.ms, sunWorld, cometVel.get(def.id) ?? null
+    );
   }
   orbits.update(camPos, scale, (pid) => world.get(pid));
   belts.update(camPos, daysSinceJ2000(clock.ms), scale.s);

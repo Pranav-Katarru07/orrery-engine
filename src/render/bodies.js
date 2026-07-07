@@ -81,6 +81,98 @@ const earthFrag = /* glsl */ `
   }
 `;
 
+// ── Comet tails ──────────────────────────────────────────────────────────
+// Twin particle tails, positioned entirely in the vertex shader: a straight
+// blue ion tail pushed directly anti-sunward by the solar wind, and a
+// broader dust tail that lags behind along the orbit (uCurve bends it
+// toward the reversed velocity direction, the classic syndyne curve).
+const tailVert = /* glsl */ `
+  attribute float aT;      // 0 (head) → 1 (tip)
+  attribute vec2 aSpread;  // lateral scatter
+  attribute float aSize;
+  uniform vec3 uDir;       // anti-sunward unit vector
+  uniform vec3 uVel;       // orbital velocity unit vector
+  uniform float uLen;      // tail length, scene units
+  uniform float uCurve;    // 0 = straight ion, ~0.5 = dust lag
+  uniform float uWidth;    // opening width fraction
+  uniform float uActivity;
+  varying float vA;
+  void main() {
+    vec3 axis = normalize(uDir);
+    vec3 p = axis * (aT * uLen) - uVel * (aT * aT * uLen * uCurve);
+    vec3 ref = abs(axis.z) > 0.94 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0);
+    vec3 b1 = normalize(cross(axis, ref));
+    vec3 b2 = normalize(cross(axis, b1));
+    float w = uWidth * uLen * (0.03 + aT);
+    p += (b1 * aSpread.x + b2 * aSpread.y) * w;
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    gl_Position = projectionMatrix * mv;
+    float dist = max(length(mv.xyz), 0.001);
+    gl_PointSize = aSize * clamp(260.0 / dist, 0.8, 6.0) * (1.0 + aT * 1.8);
+    // hollow only the immediate head (the coma sprite owns it), fade the tip
+    vA = smoothstep(0.004, 0.045, aT) * (1.0 - aT * aT) * uActivity;
+  }
+`;
+const tailFrag = /* glsl */ `
+  uniform vec3 uColor;
+  uniform float uOpacity;
+  varying float vA;
+  void main() {
+    vec2 c = gl_PointCoord - 0.5;
+    float d = length(c) * 2.0;
+    float a = pow(max(0.0, 1.0 - d), 1.6) * vA * uOpacity;
+    gl_FragColor = vec4(uColor * a, a);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+
+function buildTail({ count, color, opacity, curve, width, seed }) {
+  const aT = new Float32Array(count);
+  const aSpread = new Float32Array(count * 2);
+  const aSize = new Float32Array(count);
+  let s = seed;
+  const rand = () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+  for (let i = 0; i < count; i++) {
+    aT[i] = Math.pow(rand(), 1.4); // denser near the head
+    // uniform disc scatter
+    const ang = rand() * Math.PI * 2;
+    const r = Math.sqrt(rand());
+    aSpread[i * 2] = Math.cos(ang) * r;
+    aSpread[i * 2 + 1] = Math.sin(ang) * r;
+    aSize[i] = 1.2 + rand() * 2.4;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(count * 3), 3));
+  geo.setAttribute('aT', new THREE.BufferAttribute(aT, 1));
+  geo.setAttribute('aSpread', new THREE.BufferAttribute(aSpread, 2));
+  geo.setAttribute('aSize', new THREE.BufferAttribute(aSize, 1));
+  geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1e6);
+  const mat = new THREE.ShaderMaterial({
+    vertexShader: tailVert,
+    fragmentShader: tailFrag,
+    uniforms: {
+      uDir: { value: new THREE.Vector3(1, 0, 0) },
+      uVel: { value: new THREE.Vector3(0, 1, 0) },
+      uLen: { value: 1 },
+      uCurve: { value: curve },
+      uWidth: { value: width },
+      uActivity: { value: 0 },
+      uColor: { value: new THREE.Color(color) },
+      uOpacity: { value: opacity },
+    },
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const pts = new THREE.Points(geo, mat);
+  pts.frustumCulled = false;
+  return pts;
+}
+
 const atmoVert = /* glsl */ `
   varying vec3 vNormalW;
   varying vec3 vPosW;
@@ -256,7 +348,7 @@ export class BodyRenderer {
       group.add(glow);
     }
 
-    let tail = null, coma = null;
+    let ionTail = null, dustTail = null, coma = null;
     if (def.type === 'comet') {
       coma = new THREE.Sprite(
         new THREE.SpriteMaterial({
@@ -269,24 +361,15 @@ export class BodyRenderer {
         })
       );
       group.add(coma);
-      const tailGeo = new THREE.ConeGeometry(0.35, 1, 24, 1, true);
-      tailGeo.translate(0, -0.5, 0); // apex at comet, opens away
-      tail = new THREE.Mesh(
-        tailGeo,
-        new THREE.MeshBasicMaterial({
-          color: new THREE.Color(def.accent.glow),
-          transparent: true,
-          opacity: 0.0,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
-          side: THREE.DoubleSide,
-        })
-      );
-      group.add(tail);
+      // solar wind rips ionised gas straight anti-sunward
+      ionTail = buildTail({ count: 1000, color: '#6fb7ff', opacity: 0.66, curve: 0.03, width: 0.045, seed: 7919 });
+      // heavier dust drifts out slower and lags along the orbit
+      dustTail = buildTail({ count: 1500, color: '#ffe3bd', opacity: 0.4, curve: 0.55, width: 0.16, seed: 104729 });
+      group.add(ionTail, dustTail);
     }
 
     this.scene.add(group);
-    this.entries.set(def.id, { def, group, mesh, clouds, atmo, rings, glow, tail, coma, qAlign, uniforms });
+    this.entries.set(def.id, { def, group, mesh, clouds, atmo, rings, glow, ionTail, dustTail, coma, qAlign, uniforms });
   }
 
   pickMeshes() {
@@ -296,7 +379,8 @@ export class BodyRenderer {
   }
 
   // worldPos/camPos in scene units (THREE.Vector3); radius in units.
-  update(id, worldPos, camPos, radius, simMs, sunWorld) {
+  // velDir: unit orbital-velocity direction (comets only, for the dust tail).
+  update(id, worldPos, camPos, radius, simMs, sunWorld, velDir = null) {
     const e = this.entries.get(id);
     const { def } = e;
     e.group.position.copy(worldPos).sub(camPos);
@@ -335,21 +419,28 @@ export class BodyRenderer {
       e.atmo.material.uniforms.sunDir.value.copy(sunWorld).sub(worldPos).normalize();
     }
 
-    // comet activity ramps up near the sun
+    // comet activity: brightness climbs steeply approaching perihelion
+    // (empirical total-brightness laws go roughly as r^-4; this is its
+    // gentler visual cousin)
     if (def.type === 'comet') {
       const dAU = worldPos.distanceTo(sunWorld) / 149.5978707; // realistic-mode approximation is fine for activity level
-      const activity = Math.min(1, 2.2 / Math.max(dAU, 0.25) ** 1.5);
-      e.coma.material.opacity = 0.75 * activity;
-      e.coma.scale.setScalar(Math.max(radius * 8, 0.02 + activity * 1.2));
-      e.tail.material.opacity = 0.4 * activity;
-      if (activity > 0.02) {
+      const activity = Math.min(1, Math.pow(2.6 / Math.max(dAU, 0.3), 2.5));
+      e.coma.material.opacity = 0.55 * activity;
+      e.coma.scale.setScalar(Math.max(radius * 8, 0.02 + activity * 0.5));
+
+      const show = activity > 0.02;
+      e.ionTail.visible = show;
+      e.dustTail.visible = show;
+      if (show) {
         const antiSun = worldPos.clone().sub(sunWorld).normalize();
-        const len = Math.max(radius * 20, activity * 22);
-        e.tail.scale.set(len * 0.35, len, len * 0.35);
-        e.tail.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), antiSun);
-        e.tail.visible = true;
-      } else {
-        e.tail.visible = false;
+        const len = Math.max(radius * 25, activity * 62);
+        for (const t of [e.ionTail, e.dustTail]) {
+          const u = t.material.uniforms;
+          u.uDir.value.copy(antiSun);
+          if (velDir) u.uVel.value.copy(velDir);
+          u.uActivity.value = activity;
+          u.uLen.value = t === e.ionTail ? len : len * 0.62;
+        }
       }
     }
   }

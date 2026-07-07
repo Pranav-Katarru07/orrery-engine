@@ -21,7 +21,6 @@ export const COMET_CONTENT = {
         { label: 'Eccentricity', value: '0.967' },
         { label: 'Inclination', value: '162.3° (retrograde)' },
         { label: 'Perihelion / Aphelion', value: '0.59 / 35.1', unit: 'AU' },
-        { label: 'Next perihelion', value: 'Jul 2061' },
       ],
       note:
         'Halley orbits backwards — against the flow of the planets — diving from beyond Neptune to inside Venus’s orbit. Scrub the timeline to 1910, 1986, or 2061 to catch it sweeping through the inner system.',
@@ -98,7 +97,6 @@ export const COMET_CONTENT = {
         { label: 'Eccentricity', value: '0.995' },
         { label: 'Inclination', value: '89.4', unit: '°' },
         { label: 'Perihelion / Aphelion', value: '0.91 / ≈ 370', unit: 'AU' },
-        { label: 'Last perihelion', value: '1 Apr 1997' },
       ],
       note:
         'Hale–Bopp’s orbit is tipped almost exactly 90° to the ecliptic — it plunges through the planetary plane like a needle. Its previous visit was ~4,200 years ago; Jupiter’s gravity shortened the next return to ~2,500 years.',
@@ -158,7 +156,6 @@ export const COMET_CONTENT = {
         { label: 'Eccentricity', value: '0.641' },
         { label: 'Inclination', value: '7.0', unit: '°' },
         { label: 'Perihelion / Aphelion', value: '1.24 / 5.68', unit: 'AU' },
-        { label: 'Last perihelion (modelled)', value: 'Aug 2015' },
       ],
       note:
         'A Jupiter-family comet: close encounters with Jupiter repeatedly reshaped its orbit, most recently in 1959, which lowered its perihelion to today’s 1.24 AU.',
