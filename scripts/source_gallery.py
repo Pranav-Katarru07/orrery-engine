@@ -62,7 +62,7 @@ BODIES = {
     "vesta": dict(q="Vesta asteroid Dawn", must=["vesta"]),
     "pallas": dict(q="Pallas asteroid", must=["pallas"], avoid=["athena"]),
     "hygiea": dict(q="Hygiea asteroid", must=["hygiea"]),
-    "arrokoth": dict(q="Arrokoth Ultima Thule New Horizons", must=["arrokoth", "ultima thule", "mu69"]),
+    "arrokoth": dict(q="Ultima Thule New Horizons", must=["arrokoth", "ultima thule", "mu69"], avoid=["administrator", "team", "crowd", "countdown"]),
     "moon": dict(q="Moon lunar surface", must=["moon", "lunar"], avoid=["moonlight", "harvest moon"]),
     "phobos": dict(q="Phobos moon Mars", must=["phobos"]),
     "deimos": dict(q="Deimos moon Mars", must=["deimos"]),
@@ -86,7 +86,7 @@ BODIES = {
     "titania": dict(q="Titania Uranus moon", must=["titania"]),
     "oberon": dict(q="Oberon Uranus moon", must=["oberon"]),
     "triton": dict(q="Triton Neptune moon", must=["triton"], avoid=["triton rocket"]),
-    "proteus": dict(q="Proteus Neptune moon", must=["proteus"]),
+    "proteus": dict(q="Proteus Neptune moon Hubble", must=["proteus", "neptune moon"]),
     "nereid": dict(q="Nereid Neptune moon", must=["nereid"]),
     "charon": dict(q="Charon Pluto moon New Horizons", must=["charon"]),
     "styx": dict(q="Styx Pluto moon", must=["styx"]),
@@ -233,7 +233,7 @@ def write_js(gallery, only):
     if only and os.path.exists(DATA_JS):
         try:
             txt = open(DATA_JS).read()
-            m = re.search(r"export const GALLERY = (\{.*\});\s*$", txt, re.S)
+            m = re.search(r"export const GALLERY = (\{.*?\});\n\nexport", txt, re.S)
             if m:
                 prev = json.loads(m.group(1))
                 prev.update(gallery)
