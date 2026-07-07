@@ -186,12 +186,8 @@ window.addEventListener('keydown', (e) => {
     deselect();
   } else if (e.code === 'KeyR' && !typing && !search.isOpen) {
     // recenter: re-frame the focused body, or fly home when free
-    if (rig.focusId) {
-      const isComet = defOf(rig.focusId)?.type === 'comet';
-      rig.flyTo(rig.focusId, getBodyForRig, isComet ? 700 : 4.6, isComet);
-    } else {
-      rig.recenterHome();
-    }
+    if (rig.focusId) rig.flyTo(rig.focusId, getBodyForRig);
+    else rig.recenterHome();
   }
 });
 
