@@ -6,9 +6,10 @@ const icon = {
   orbits: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><ellipse cx="8" cy="8" rx="6.4" ry="3.4"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/></svg>`,
   stars: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 12l3.5-3.5L9 11l4-6"/><circle cx="3" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="6.5" cy="8.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="11" r="1.1" fill="currentColor" stroke="none"/><circle cx="13" cy="5" r="1.1" fill="currentColor" stroke="none"/></svg>`,
   search: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4.4"/><path d="M10.4 10.4L14 14"/></svg>`,
+  gallery: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="2.5" width="5" height="5" rx="1"/><rect x="9" y="2.5" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>`,
 };
 
-export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen }) {
+export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen, onGalleryOpen }) {
   const bar = document.createElement('div');
   bar.className = 'topbar';
   bar.innerHTML = `
@@ -26,6 +27,7 @@ export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen 
         <button data-mode="realistic">Realistic</button>
       </div>
       <div class="ctl-divider"></div>
+      <button class="ctl-btn" data-k="gallery">${icon.gallery}Gallery</button>
       <button class="ctl-btn" data-k="search">${icon.search}Search <span class="kbd">Space</span></button>
     </div>
   `;
@@ -37,6 +39,10 @@ export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen 
     btns[k] = b;
     if (k === 'search') {
       b.addEventListener('click', onSearchOpen);
+      continue;
+    }
+    if (k === 'gallery') {
+      b.addEventListener('click', onGalleryOpen);
       continue;
     }
     b.classList.toggle('active', settings[k]);
