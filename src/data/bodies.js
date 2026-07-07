@@ -197,6 +197,41 @@ export const BODIES = [
     orbitAU: 39.4, labelRank: 3,
   },
 
+  // ── Asteroids & KBOs ────────────────────────────────────────────────────
+  {
+    id: 'vesta', name: 'Vesta', type: 'asteroid', parent: 'sun', provider: 'kepler',
+    elements: { a: 2.3617, e: 0.0887, i: 7.142, om: 103.81, w: 150.87, M0: 169.4, epochMs: EPOCH_2020, periodDays: 1325.75 },
+    radiusKm: 262.7, rotationHours: 5.342,
+    pole: { ra: 309.03, dec: 42.23 },
+    texture: 'vesta.png',
+    accent: { glow: '#9B9188', ui: '#C4B9AD' },
+    aliases: ['4 vesta'], orbitAU: 2.362, labelRank: 3,
+  },
+  {
+    id: 'pallas', name: 'Pallas', type: 'asteroid', parent: 'sun', provider: 'kepler',
+    elements: { a: 2.7728, e: 0.2302, i: 34.837, om: 173.02, w: 310.45, M0: 59.7, epochMs: EPOCH_2020, periodDays: 1686.4 },
+    radiusKm: 256, rotationHours: 7.813,
+    pole: { ra: 33, dec: -3 },
+    accent: { glow: '#8A93A0', ui: '#B3BCC9' },
+    aliases: ['2 pallas'], orbitAU: 2.773, labelRank: 3,
+  },
+  {
+    id: 'hygiea', name: 'Hygiea', type: 'asteroid', parent: 'sun', provider: 'kepler',
+    elements: { a: 3.1417, e: 0.1125, i: 3.831, om: 283.2, w: 312.32, M0: 152.2, epochMs: EPOCH_2020, periodDays: 2029.7 },
+    radiusKm: 217, rotationHours: 13.83,
+    pole: { ra: 0, dec: 90 },
+    accent: { glow: '#75726E', ui: '#A39F99' },
+    aliases: ['10 hygiea'], orbitAU: 3.142, labelRank: 4,
+  },
+  {
+    id: 'arrokoth', name: 'Arrokoth', type: 'kbo', parent: 'sun', provider: 'kepler',
+    elements: { a: 44.581, e: 0.0417, i: 2.451, om: 158.98, w: 174.42, M0: 316.0, epochMs: EPOCH_2020, periodDays: 108780 },
+    radiusKm: 11, rotationHours: 15.92,
+    pole: { ra: 317.5, dec: -24.9 },
+    accent: { glow: '#A8695A', ui: '#CC8A78' },
+    aliases: ['ultima thule', '2014 mu69', 'kbo'], orbitAU: 44.58, labelRank: 4,
+  },
+
   // ── Moons ───────────────────────────────────────────────────────────────
   {
     id: 'moon', name: 'The Moon', type: 'moon', parent: 'earth', provider: 'moon-engine',
@@ -249,6 +284,14 @@ export const BODIES = [
     texture: 'callisto.png',
     accent: { glow: '#7A7268', ui: '#A69C8E' },
     moonDistKm: 1882700, labelRank: 3,
+  },
+  {
+    id: 'amalthea', name: 'Amalthea', type: 'moon', parent: 'jupiter', provider: 'moon-kepler',
+    elements: moonEl(181366, 0.498, 0.37, 0.003, 17),
+    radiusKm: 83.5, rotationHours: 11.95, pole: { ra: 268.06, dec: 64.5 },
+    texture: 'amalthea.png',
+    accent: { glow: '#B06A4C', ui: '#D68F6E' },
+    moonDistKm: 181366, labelRank: 4,
   },
   {
     id: 'mimas', name: 'Mimas', type: 'moon', parent: 'saturn', provider: 'moon-kepler',
@@ -308,6 +351,23 @@ export const BODIES = [
     moonDistKm: 3560840, labelRank: 4,
   },
   {
+    id: 'hyperion', name: 'Hyperion', type: 'moon', parent: 'saturn', provider: 'moon-kepler',
+    elements: moonEl(1481010, 21.28, 0.43, 0.123, 18),
+    radiusKm: 135, rotationHours: 120, // chaotic tumbler — no fixed period
+    pole: { ra: 40.59, dec: 83.54 },
+    texture: 'hyperion.png',
+    accent: { glow: '#AD9B82', ui: '#CFBEA4' },
+    moonDistKm: 1481010, labelRank: 4,
+  },
+  {
+    id: 'phoebe', name: 'Phoebe', type: 'moon', parent: 'saturn', provider: 'moon-kepler',
+    elements: moonEl(12947780, 550.3, 175.2, 0.156, 19),
+    radiusKm: 106.5, rotationHours: 9.27, pole: { ra: 356.9, dec: 77.8 },
+    texture: 'phoebe.png',
+    accent: { glow: '#6E6B67', ui: '#9B9791' },
+    moonDistKm: 12947780, labelRank: 4,
+  },
+  {
     id: 'miranda', name: 'Miranda', type: 'moon', parent: 'uranus', provider: 'moon-kepler',
     elements: moonEl(129900, 1.413, 4.34, 0.0013, 10),
     radiusKm: 235.8, rotationHours: 33.9, pole: { ra: 257.31, dec: -15.18 },
@@ -357,12 +417,67 @@ export const BODIES = [
     moonDistKm: 354759, labelRank: 3,
   },
   {
+    id: 'proteus', name: 'Proteus', type: 'moon', parent: 'neptune', provider: 'moon-kepler',
+    elements: moonEl(117646, 1.122, 0.08, 0.0005, 20),
+    radiusKm: 210, rotationHours: 26.9, pole: { ra: 299.36, dec: 43.46 },
+    texture: 'proteus.png',
+    accent: { glow: '#7D828A', ui: '#A8ADB6' },
+    moonDistKm: 117646, labelRank: 4,
+  },
+  {
+    id: 'nereid', name: 'Nereid', type: 'moon', parent: 'neptune', provider: 'moon-kepler',
+    elements: moonEl(5513820, 360.13, 7.23, 0.749, 21),
+    radiusKm: 170, rotationHours: 11.52, pole: { ra: 299.36, dec: 43.46 },
+    accent: { glow: '#9AA0A8', ui: '#C2C8D0' },
+    moonDistKm: 5513820, labelRank: 4,
+  },
+  {
     id: 'charon', name: 'Charon', type: 'moon', parent: 'pluto', provider: 'moon-kepler',
     elements: moonEl(19591, 6.387, 0.08, 0.0002, 16),
     radiusKm: 606, rotationHours: 153.29, pole: { ra: 132.99, dec: -6.16 },
     texture: 'charon.png',
     accent: { glow: '#A99C93', ui: '#CCBFB4' },
     moonDistKm: 19591, labelRank: 4,
+  },
+
+  {
+    id: 'styx', name: 'Styx', type: 'moon', parent: 'pluto', provider: 'moon-kepler',
+    elements: moonEl(42656, 20.16, 0.8, 0.006, 23),
+    radiusKm: 5.5, rotationHours: 78, // chaotic tumbler
+    pole: { ra: 132.99, dec: -6.16 },
+    accent: { glow: '#A6A9AE', ui: '#C9CCD1' },
+    moonDistKm: 42656, labelRank: 4,
+  },
+  {
+    id: 'nix', name: 'Nix', type: 'moon', parent: 'pluto', provider: 'moon-kepler',
+    elements: moonEl(48694, 24.85, 0.13, 0.002, 24),
+    radiusKm: 19.5, rotationHours: 43.9, // chaotic tumbler
+    pole: { ra: 132.99, dec: -6.16 },
+    accent: { glow: '#B6B0A6', ui: '#D6D0C6' },
+    moonDistKm: 48694, labelRank: 4,
+  },
+  {
+    id: 'kerberos', name: 'Kerberos', type: 'moon', parent: 'pluto', provider: 'moon-kepler',
+    elements: moonEl(57783, 32.17, 0.4, 0.003, 25),
+    radiusKm: 6, rotationHours: 128, // chaotic tumbler
+    pole: { ra: 132.99, dec: -6.16 },
+    accent: { glow: '#8F8A83', ui: '#B6B1AA' },
+    moonDistKm: 57783, labelRank: 4,
+  },
+  {
+    id: 'hydra', name: 'Hydra', type: 'moon', parent: 'pluto', provider: 'moon-kepler',
+    elements: moonEl(64738, 38.2, 0.24, 0.006, 26),
+    radiusKm: 25.5, rotationHours: 10.3, // chaotic tumbler
+    pole: { ra: 132.99, dec: -6.16 },
+    accent: { glow: '#B9BEC5', ui: '#D9DEE4' },
+    moonDistKm: 64738, labelRank: 4,
+  },
+  {
+    id: 'dysnomia', name: 'Dysnomia', type: 'moon', parent: 'eris', provider: 'moon-kepler',
+    elements: moonEl(37273, 15.786, 0, 0.006, 22),
+    radiusKm: 350, rotationHours: 378.9, pole: { ra: 0, dec: 90 },
+    accent: { glow: '#5F6167', ui: '#8C8F97' },
+    moonDistKm: 37273, labelRank: 4,
   },
 
   // ── Comets ──────────────────────────────────────────────────────────────
