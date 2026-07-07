@@ -8,6 +8,7 @@ dist-ssr/
 # Fetched assets — regenerate with `npm run fetch-assets`
 public/textures/
 public/data/
+# NOTE: public/gallery/ is committed (real NASA imagery, curated) — not ignored
 
 # Vite
 .vite/
