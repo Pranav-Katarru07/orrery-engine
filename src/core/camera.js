@@ -102,19 +102,30 @@ export class CameraRig {
   }
 
   // Fly to a body. getBody(id) → {pos: Vector3 world units, radius: units}
-  flyTo(id, getBody) {
+  // frameZoom: arrival distance in body radii (comets need room — their
+  // coma and tails engulf the default close framing).
+  // sideOn: approach perpendicular to the sun line instead of sunward, so
+  // a comet's tails stream across the frame rather than backlighting it.
+  flyTo(id, getBody, frameZoom = 4.6, sideOn = false) {
     const b = getBody(id);
-    // Approach from the current direction, nudged sunward and lifted a bit
-    // so arrivals frame a lit three-quarter view instead of the night side.
     const toCam = this.pos.clone().sub(b.pos);
     if (toCam.lengthSq() < 1e-12) toCam.set(0, -1, 0.2);
     toCam.normalize();
     const sunward = b.pos.clone().multiplyScalar(-1).normalize(); // body → sun
-    this.orbitDir = toCam.multiplyScalar(0.72).addScaledVector(sunward, 0.42);
-    this.orbitDir.z += 0.22;
+    if (sideOn) {
+      const side = new THREE.Vector3().crossVectors(sunward, UP).normalize();
+      if (side.dot(toCam) < 0) side.negate(); // arrive on the nearer flank
+      this.orbitDir = side;
+      this.orbitDir.z += 0.3;
+    } else {
+      // nudged sunward and lifted a bit so arrivals frame a lit
+      // three-quarter view instead of the night side
+      this.orbitDir = toCam.multiplyScalar(0.72).addScaledVector(sunward, 0.42);
+      this.orbitDir.z += 0.22;
+    }
     this.orbitDir.normalize();
 
-    this.zoom = 4.6;
+    this.zoom = frameZoom;
     const endPos = b.pos.clone().addScaledVector(this.orbitDir, this.zoom * b.radius);
     const dist = endPos.distanceTo(this.pos);
     const dur = clamp(1.5 + dist / 1500, 1.5, 2.5);

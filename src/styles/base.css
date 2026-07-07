@@ -413,6 +413,21 @@ html, body {
   background: linear-gradient(90deg, var(--accent-soft), var(--accent));
 }
 
+.jump-btn {
+  display: block; width: 100%;
+  margin: -6px 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--accent-line); border-radius: var(--radius-sm);
+  background: var(--accent-soft); color: var(--accent);
+  font: inherit; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; transition: all var(--ui-fast);
+}
+.jump-btn:hover { background: var(--accent-soft); filter: brightness(1.25); }
+.jump-note {
+  margin: -6px 0 16px;
+  font-size: 11px; color: var(--text-faint); text-align: center;
+}
+
 .moon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
 .moon-chip {
   display: flex; flex-direction: column; gap: 2px;

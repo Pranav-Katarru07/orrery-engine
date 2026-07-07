@@ -1,5 +1,26 @@
+import { TIME_MAX } from '../consts.js';
+
 // Info panel: Overview / Orbit / <deep-dive> tabs, subtab pills under the
 // deep-dive tab, accent re-skinned per body via the CSS accent variables.
+
+// Comet elements set M0 = 0 at a perihelion epoch (see data/bodies.js), so
+// perihelia land every whole period from there.
+function nextPerihelionMs(el, simMs) {
+  const period = el.periodDays * 86400000;
+  const k = Math.ceil((simMs - el.epochMs) / period);
+  return el.epochMs + k * period;
+}
+
+const fmtPerihelion = new Intl.DateTimeFormat('en-GB', {
+  month: 'short', year: 'numeric', timeZone: 'UTC',
+});
+
+function returnPeriodLabel(periodDays) {
+  const yr = periodDays / 365.25;
+  if (yr >= 200) return `≈ ${Math.round(yr / 10) * 10}`;
+  if (yr >= 20) return `≈ ${Math.round(yr)}`;
+  return `≈ ${yr.toFixed(1)}`;
+}
 
 const TAB3_TITLE = {
   star: 'Star', planet: 'Planet', dwarf: 'Dwarf Planet',
@@ -15,9 +36,11 @@ const fmtWaypoint = new Intl.DateTimeFormat('en-GB', {
 });
 
 export class Panel {
-  constructor(ui, { onSelect, onClose }) {
+  constructor(ui, { onSelect, onClose, onJumpToDate, getSimMs }) {
     this.onSelect = onSelect;
     this.onClose = onClose;
+    this.onJumpToDate = onJumpToDate;
+    this.getSimMs = getSimMs;
     const el = document.createElement('aside');
     el.className = 'panel glass';
     el.innerHTML = `
@@ -107,9 +130,39 @@ export class Panel {
       .join('');
     this.$body.innerHTML = `
       <p>${c.summary}</p>
+      ${this.def.type === 'comet' ? this._flybyStats() : ''}
       <h4>Top 5 Facts</h4>
       <div class="fact-list">${facts}</div>
     `;
+    this._wireJumpButton();
+  }
+
+  // Live next-perihelion readout for comets, computed from the sim clock.
+  _flybyStats(withButton = false) {
+    const el = this.def.elements;
+    if (!el) return '';
+    const next = nextPerihelionMs(el, this.getSimMs());
+    const beyond = next > TIME_MAX;
+    const stats = this._statGrid([
+      { label: 'Next perihelion', value: fmtPerihelion.format(new Date(next)) },
+      { label: 'Returns every', value: returnPeriodLabel(el.periodDays), unit: 'yr' },
+    ]);
+    const button =
+      withButton && !beyond
+        ? `<button class="jump-btn" data-jump="${next}">Jump to next perihelion →</button>`
+        : withButton
+          ? `<div class="jump-note">Next perihelion falls beyond this timeline's 2250 horizon</div>`
+          : '';
+    return stats + button;
+  }
+
+  _wireJumpButton() {
+    const btn = this.$body.querySelector('.jump-btn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      this.onJumpToDate(Number(btn.dataset.jump));
+      this._render(); // refresh the live readouts
+    });
   }
 
   _renderOrbit() {
@@ -120,12 +173,15 @@ export class Panel {
     const c = this.content;
     const stats = this._statGrid(c.orbit?.stats ?? []);
     const viz = this._orbitViz();
+    const flyby = this.def.type === 'comet' ? `<h4>Next Return</h4>${this._flybyStats(true)}` : '';
     this.$body.innerHTML = `
       ${viz}
+      ${flyby}
       <h4>Orbital Elements</h4>
       ${stats}
       ${c.orbit?.note ? `<p>${c.orbit.note}</p>` : ''}
     `;
+    this._wireJumpButton();
   }
 
   _renderMissionJourney() {
