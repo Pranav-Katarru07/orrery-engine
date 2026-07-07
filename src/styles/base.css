@@ -208,7 +208,7 @@ html, body {
   padding: 12px 18px 14px;
 }
 .timeline:hover .scrubber, .timeline.scrubbing .scrubber {
-  max-height: 26px; opacity: 1; margin-top: 10px;
+  max-height: 36px; opacity: 1; margin-top: 10px;
   pointer-events: auto;
 }
 .timeline-row { display: flex; align-items: center; gap: 12px; }
@@ -244,7 +244,7 @@ html, body {
 }
 .tl-now:hover { color: var(--text); border-color: var(--border-strong); }
 
-.scrubber { position: relative; height: 26px; cursor: pointer; }
+.scrubber { position: relative; height: 36px; cursor: pointer; }
 .scrub-track {
   position: absolute; left: 0; right: 0; top: 12px; height: 3px;
   border-radius: 2px; background: rgba(255, 255, 255, 0.1);
