@@ -1,4 +1,6 @@
 import { TIME_MAX } from '../consts.js';
+import { CROSS_SECTIONS, MAGNETOSPHERES } from '../data/visuals.js';
+import { buildCrossSection, buildMagnetosphere } from './viz.js';
 
 // Info panel: Overview / Orbit / <deep-dive> tabs, subtab pills under the
 // deep-dive tab, accent re-skinned per body via the CSS accent variables.
@@ -254,6 +256,15 @@ export class Panel {
     // moon chips are interactive
     for (const chip of this.$body.querySelectorAll('.moon-chip')) {
       chip.addEventListener('click', () => this.onSelect(chip.dataset.id));
+    }
+    // visualizations slot in above the text when their subtab is open
+    const mg = MAGNETOSPHERES[this.def.id];
+    if (mg && this.subtab === (mg.subtab ?? 'magnetosphere')) {
+      this.$body.prepend(buildMagnetosphere(this.def, mg));
+    }
+    const cs = CROSS_SECTIONS[this.def.id];
+    if (cs && this.subtab === (cs.subtab ?? 'composition')) {
+      this.$body.prepend(buildCrossSection(this.def, cs));
     }
   }
 
