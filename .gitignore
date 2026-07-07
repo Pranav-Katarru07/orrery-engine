@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Fetched assets — regenerate with `npm run fetch-assets`
+public/textures/
+public/data/
+
+# Vite
+.vite/
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Claude Code harness scaffolding (agent-local, not project code)
+.agents/
+.claude/
+skills-lock.json
+
+# Planning doc, not part of the shipped project
+orrery-project-spec.md

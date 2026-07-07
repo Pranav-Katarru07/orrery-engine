@@ -1,0 +1,19 @@
+{
+  "name": "orrery-engine",
+  "version": "0.1.0",
+  "description": "Interactive digital orrery — date-accurate 3D solar system",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "fetch-assets": "./scripts/fetch-assets.sh"
+  },
+  "dependencies": {
+    "astronomy-engine": "^2.1.19",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "vite": "^8.1.3"
+  }
+}

@@ -1,0 +1,190 @@
+import * as THREE from 'three';
+import { clamp, easeInOutQuint } from '../consts.js';
+
+const UP = new THREE.Vector3(0, 0, 1); // ecliptic north
+
+// Camera rig with three modes:
+//   free    — WASD/QE + drag-look free flight, speed scales with altitude
+//   transit — cinematic eased flight toward a body (1.5–2.5s), then focus
+//   focus   — orbit the target; the offset is stored as zoom × body radius,
+//             so scale-mode morphs keep the framing automatically
+export class CameraRig {
+  constructor(camera, dom) {
+    this.camera = camera;
+    this.pos = new THREE.Vector3(0, -1200, 520); // virtual world position (units)
+    this.quat = new THREE.Quaternion();
+    this.mode = 'free';
+
+    this.focusId = null;
+    this.zoom = 5; // offset length in body radii
+    this.orbitDir = new THREE.Vector3(0, -1, 0.35).normalize();
+
+    this._transit = null;
+    this._keys = new Set();
+    this._dragging = false;
+    this._lastPointer = { x: 0, y: 0 };
+    this.onModeChange = null; // callback(mode, focusId)
+
+    this._lookAtWorld(new THREE.Vector3(0, 0, 0));
+    this._bind(dom);
+  }
+
+  _bind(dom) {
+    dom.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      this._dragging = true;
+      this._dragMoved = 0;
+      this._lastPointer = { x: e.clientX, y: e.clientY };
+      dom.setPointerCapture(e.pointerId);
+    });
+    dom.addEventListener('pointermove', (e) => {
+      if (!this._dragging) return;
+      const dx = e.clientX - this._lastPointer.x;
+      const dy = e.clientY - this._lastPointer.y;
+      this._lastPointer = { x: e.clientX, y: e.clientY };
+      this._dragMoved += Math.abs(dx) + Math.abs(dy);
+      if (this.mode === 'focus') this._orbitBy(dx, dy);
+      else if (this.mode === 'free') this._lookBy(dx, dy);
+    });
+    dom.addEventListener('pointerup', () => (this._dragging = false));
+    dom.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const k = Math.exp(e.deltaY * 0.0012);
+      if (this.mode === 'focus') {
+        this.zoom = clamp(this.zoom * k, 1.6, 50000);
+      } else if (this.mode === 'free') {
+        // dolly along view direction, altitude-proportional
+        const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(this.quat);
+        const step = this._freeSpeed() * -e.deltaY * 0.0025;
+        this.pos.addScaledVector(fwd, step);
+      }
+    }, { passive: false });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      this._keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e) => this._keys.delete(e.code));
+    window.addEventListener('blur', () => this._keys.clear());
+  }
+
+  // True while a click-drag has moved enough to count as camera movement,
+  // letting the picker distinguish orbit-drags from selection clicks.
+  consumeClickIsDrag() {
+    return this._dragMoved > 6;
+  }
+
+  _orbitBy(dx, dy) {
+    const yaw = new THREE.Quaternion().setFromAxisAngle(UP, -dx * 0.005);
+    this.orbitDir.applyQuaternion(yaw);
+    // pitch around the horizontal axis perpendicular to view
+    const right = new THREE.Vector3().crossVectors(this.orbitDir, UP).normalize();
+    const pitch = new THREE.Quaternion().setFromAxisAngle(right, -dy * 0.005);
+    const next = this.orbitDir.clone().applyQuaternion(pitch);
+    if (Math.abs(next.dot(UP)) < 0.985) this.orbitDir.copy(next).normalize();
+  }
+
+  _lookBy(dx, dy) {
+    const yaw = new THREE.Quaternion().setFromAxisAngle(UP, -dx * 0.0028);
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(this.quat);
+    const pitch = new THREE.Quaternion().setFromAxisAngle(right, -dy * 0.0028);
+    this.quat.premultiply(yaw).premultiply(pitch).normalize();
+  }
+
+  _freeSpeed() {
+    return Math.max(0.5, this.pos.length() * 0.5);
+  }
+
+  _lookAtWorld(target) {
+    const m = new THREE.Matrix4().lookAt(this.pos, target, UP);
+    this.quat.setFromRotationMatrix(m);
+  }
+
+  // Fly to a body. getBody(id) → {pos: Vector3 world units, radius: units}
+  flyTo(id, getBody) {
+    const b = getBody(id);
+    // Approach from the current direction, nudged sunward and lifted a bit
+    // so arrivals frame a lit three-quarter view instead of the night side.
+    const toCam = this.pos.clone().sub(b.pos);
+    if (toCam.lengthSq() < 1e-12) toCam.set(0, -1, 0.2);
+    toCam.normalize();
+    const sunward = b.pos.clone().multiplyScalar(-1).normalize(); // body → sun
+    this.orbitDir = toCam.multiplyScalar(0.72).addScaledVector(sunward, 0.42);
+    this.orbitDir.z += 0.22;
+    this.orbitDir.normalize();
+
+    this.zoom = 4.6;
+    const endPos = b.pos.clone().addScaledVector(this.orbitDir, this.zoom * b.radius);
+    const dist = endPos.distanceTo(this.pos);
+    const dur = clamp(1.5 + dist / 1500, 1.5, 2.5);
+
+    this._transit = {
+      id,
+      t0: performance.now(),
+      dur: dur * 1000,
+      fromPos: this.pos.clone(),
+      fromQuat: this.quat.clone(),
+    };
+    this.mode = 'transit';
+    this.focusId = id;
+    this.onModeChange?.(this.mode, id);
+  }
+
+  releaseFocus() {
+    if (this.mode === 'free') return;
+    this.mode = 'free';
+    this.focusId = null;
+    this._transit = null;
+    this.onModeChange?.(this.mode, null);
+  }
+
+  update(dt, getBody) {
+    if (this.mode === 'transit') this._updateTransit(getBody);
+    else if (this.mode === 'focus') this._updateFocus(getBody);
+    else this._updateFree(dt);
+    this.camera.quaternion.copy(this.quat);
+  }
+
+  _updateTransit(getBody) {
+    const tr = this._transit;
+    const b = getBody(tr.id);
+    const t = clamp((performance.now() - tr.t0) / tr.dur, 0, 1);
+    const e = easeInOutQuint(t);
+
+    const endPos = b.pos.clone().addScaledVector(this.orbitDir, this.zoom * b.radius);
+    this.pos.lerpVectors(tr.fromPos, endPos, e);
+
+    // gaze locks onto the destination ahead of arrival
+    const gaze = clamp(t * 1.7, 0, 1);
+    const m = new THREE.Matrix4().lookAt(this.pos, b.pos, UP);
+    const want = new THREE.Quaternion().setFromRotationMatrix(m);
+    this.quat.slerpQuaternions(tr.fromQuat, want, easeInOutQuint(gaze));
+
+    if (t >= 1) {
+      this.mode = 'focus';
+      this._transit = null;
+      this.onModeChange?.(this.mode, tr.id);
+    }
+  }
+
+  _updateFocus(getBody) {
+    const b = getBody(this.focusId);
+    this.pos.copy(b.pos).addScaledVector(this.orbitDir, this.zoom * b.radius);
+    this._lookAtWorld(b.pos);
+  }
+
+  _updateFree(dt) {
+    const speed = this._freeSpeed() * (this._keys.has('ShiftLeft') || this._keys.has('ShiftRight') ? 4 : 1);
+    const move = new THREE.Vector3();
+    if (this._keys.has('KeyW') || this._keys.has('ArrowUp')) move.z -= 1;
+    if (this._keys.has('KeyS') || this._keys.has('ArrowDown')) move.z += 1;
+    if (this._keys.has('KeyA') || this._keys.has('ArrowLeft')) move.x -= 1;
+    if (this._keys.has('KeyD') || this._keys.has('ArrowRight')) move.x += 1;
+    if (this._keys.has('KeyQ')) move.y -= 1;
+    if (this._keys.has('KeyE')) move.y += 1;
+    if (move.lengthSq() > 0) {
+      move.normalize().applyQuaternion(this.quat);
+      this.pos.addScaledVector(move, speed * dt);
+    }
+  }
+}

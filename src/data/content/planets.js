@@ -1,0 +1,1051 @@
+// Encyclopedic content — the eight planets.
+// Figures from NASA NSSDC planetary fact sheets and JPL Solar System Dynamics.
+
+export const PLANET_CONTENT = {
+  // ── Mercury ─────────────────────────────────────────────────────────────
+  mercury: {
+    summary:
+      'Mercury is the smallest planet and the closest to the Sun, a cratered iron world that swings through the sky faster than any other. With almost no atmosphere to trap heat, it endures the most extreme temperature swings in the solar system.',
+    facts: [
+      'A year on Mercury lasts just 88 Earth days — but thanks to its slow spin, a single solar day (sunrise to sunrise) lasts 176.',
+      'Surface temperatures swing by about 600 °C, from −173 °C at night to 427 °C in daytime.',
+      'Mercury is shrinking: as its huge iron core cools, the planet has contracted, wrinkling its crust into kilometre-high scarps.',
+      'Despite the heat, ice hides in permanently shadowed craters at the poles.',
+      'Its iron core spans about 85% of the planet’s radius — proportionally the largest of any planet.',
+    ],
+    orbit: {
+      e: 0.2056,
+      stats: [
+        { label: 'Semi-major axis', value: '0.387', unit: 'AU' },
+        { label: 'Orbital period', value: '87.97', unit: 'days' },
+        { label: 'Eccentricity', value: '0.2056' },
+        { label: 'Inclination', value: '7.00', unit: '°' },
+        { label: 'Mean orbital speed', value: '47.4', unit: 'km/s' },
+        { label: 'Perihelion / Aphelion', value: '0.31 / 0.47', unit: 'AU' },
+      ],
+      note:
+        'Mercury has the most eccentric orbit of the eight planets. The slow precession of its perihelion famously defied Newtonian gravity until Einstein’s general relativity explained the missing 43 arcseconds per century.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Mean radius', value: '2,439.7', unit: 'km' },
+              { label: 'Mass', value: '3.30 × 10²³', unit: 'kg' },
+              { label: 'Density', value: '5.43', unit: 'g/cm³' },
+              { label: 'Gravity', value: '3.70', unit: 'm/s²' },
+              { label: 'Sidereal rotation', value: '58.65', unit: 'days' },
+              { label: 'Axial tilt', value: '0.03', unit: '°' },
+              { label: 'Surface temp', value: '−173 to 427', unit: '°C' },
+              { label: 'Albedo', value: '0.12' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Mercury is locked in a 3:2 spin–orbit resonance: it rotates exactly three times for every two orbits of the Sun. Its heavily cratered surface resembles the Moon’s, punctuated by the 1,550 km Caloris basin — one of the largest impact scars in the solar system.',
+          },
+        ],
+      },
+      {
+        id: 'atmosphere',
+        title: 'Atmosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Mercury has no true atmosphere — only a tenuous exosphere of atoms blasted off its surface by solar wind and micrometeorites. Surface pressure is about a quadrillion times lower than Earth’s.',
+          },
+          {
+            type: 'bars',
+            items: [
+              { label: 'Oxygen (O₂)', frac: 0.42, display: '42%' },
+              { label: 'Sodium', frac: 0.29, display: '29%' },
+              { label: 'Hydrogen', frac: 0.22, display: '22%' },
+              { label: 'Helium', frac: 0.06, display: '6%' },
+              { label: 'Potassium & others', frac: 0.01, display: '≈ 1%' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Solar radiation pressure continuously strips this exosphere away, streaming sodium atoms into a comet-like tail that can stretch for millions of kilometres behind the planet.',
+          },
+        ],
+      },
+      {
+        id: 'composition',
+        title: 'Composition',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Mercury is essentially a cannonball with a thin rocky shell: a metallic iron–nickel core about 4,000 km across beneath a silicate mantle and crust only ~400 km thick. Its uncompressed density is the highest of any planet.',
+          },
+          {
+            type: 'p',
+            text:
+              'Why Mercury is so metal-rich is an open question — a giant impact may have stripped away much of its original mantle, or the young Sun’s heat may have winnowed light material from the inner nebula.',
+          },
+        ],
+      },
+      {
+        id: 'magnetosphere',
+        title: 'Magnetosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Mariner 10 surprised everyone in 1974 by detecting a global magnetic field — weak (about 1% of Earth’s) but genuine, generated by a still-molten outer core. Mercury is the only rocky planet besides Earth with an active dynamo.',
+          },
+          {
+            type: 'p',
+            text:
+              'The field is strong enough to carve a miniature magnetosphere from the solar wind, complete with magnetic tornadoes that funnel plasma down to the surface.',
+          },
+        ],
+      },
+      { id: 'moons', title: 'Moons', blocks: [{ type: 'p', text: 'Mercury has no moons — the Sun’s gravity so close in leaves no stable room for one.' }, { type: 'moons' }] },
+      {
+        id: 'exploration',
+        title: 'Exploration',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Only three spacecraft have visited. Mariner 10 made three flybys in 1974–75 and mapped 45% of the surface. MESSENGER orbited from 2011 to 2015, mapping the entire planet and confirming polar ice. ESA/JAXA’s BepiColombo, launched in 2018, is en route to begin its own orbital mission.',
+          },
+          {
+            type: 'p',
+            text:
+              'Reaching Mercury is oddly difficult: a spacecraft must shed enormous orbital energy to fall inward without being captured by the Sun, requiring long gravity-assist tours.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'On parts of Mercury, an observer would see the Sun rise, stop, reverse direction briefly, then continue — a consequence of the planet’s eccentric orbit outpacing its spin near perihelion.' },
+          { type: 'p', text: 'Mercury, not Venus, is on average the closest planet to Earth — and to every other planet — because it never strays far from the Sun.' },
+          { type: 'p', text: 'A 70 kg person would weigh just 26 kg on Mercury.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Venus ───────────────────────────────────────────────────────────────
+  venus: {
+    summary:
+      'Venus is Earth’s near-twin in size and mass, wrapped in a crushing carbon-dioxide atmosphere beneath unbroken sulphuric-acid clouds. A runaway greenhouse effect makes it the hottest planet in the solar system — hotter, even, than Mercury.',
+    facts: [
+      'Surface temperature holds near 464 °C — hot enough to melt lead — day and night, pole to equator.',
+      'Atmospheric pressure at the surface is 92 bar, equivalent to diving 900 m beneath Earth’s ocean.',
+      'Venus rotates backwards, and so slowly that its day (243 Earth days) is longer than its year (225).',
+      'Its clouds are droplets of concentrated sulphuric acid, whipped around the planet every four days by super-rotating winds.',
+      'After the Moon, Venus is the brightest natural object in Earth’s night sky.',
+    ],
+    orbit: {
+      e: 0.0068,
+      stats: [
+        { label: 'Semi-major axis', value: '0.723', unit: 'AU' },
+        { label: 'Orbital period', value: '224.7', unit: 'days' },
+        { label: 'Eccentricity', value: '0.0068' },
+        { label: 'Inclination', value: '3.39', unit: '°' },
+        { label: 'Mean orbital speed', value: '35.0', unit: 'km/s' },
+        { label: 'Perihelion / Aphelion', value: '0.718 / 0.728', unit: 'AU' },
+      ],
+      note: 'Venus has the most circular orbit of any planet — its distance from the Sun varies by barely 1.5%.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Mean radius', value: '6,051.8', unit: 'km' },
+              { label: 'Mass', value: '4.87 × 10²⁴', unit: 'kg' },
+              { label: 'Density', value: '5.24', unit: 'g/cm³' },
+              { label: 'Gravity', value: '8.87', unit: 'm/s²' },
+              { label: 'Sidereal rotation', value: '−243.0', unit: 'days' },
+              { label: 'Axial tilt', value: '177.4', unit: '°' },
+              { label: 'Surface temp', value: '464', unit: '°C' },
+              { label: 'Surface pressure', value: '92', unit: 'bar' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Radar mapping reveals a young volcanic surface — vast lava plains, tens of thousands of volcanoes, and pancake domes — resurfaced within the last billion years. In 2023, re-analysis of Magellan images caught a volcanic vent visibly changing shape, evidence that Venus is volcanically active today.',
+          },
+        ],
+      },
+      {
+        id: 'atmosphere',
+        title: 'Atmosphere',
+        blocks: [
+          {
+            type: 'bars',
+            items: [
+              { label: 'Carbon dioxide', frac: 0.965, display: '96.5%' },
+              { label: 'Nitrogen', frac: 0.035, display: '3.5%' },
+              { label: 'SO₂, Ar, H₂O (traces)', frac: 0.002, display: '< 0.2%' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'The CO₂ ocean of an atmosphere traps solar heat so effectively that Venus radiates almost none of it back — the definitive runaway greenhouse. Fifty kilometres up, though, temperature and pressure become almost Earth-like, making the cloud tops arguably the most habitable “surface” off Earth.',
+          },
+          {
+            type: 'p',
+            text:
+              'The upper atmosphere super-rotates, circling the planet in ~4 days — sixty times faster than the surface below turns.',
+          },
+        ],
+      },
+      {
+        id: 'composition',
+        title: 'Composition',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Venus likely mirrors Earth internally: an iron core roughly 3,000 km in radius, a rocky mantle, and a basaltic crust. But with no plate tectonics, its heat escapes in planet-wide volcanic resurfacing episodes instead of steady seafloor spreading.',
+          },
+          {
+            type: 'p',
+            text:
+              'Water is almost entirely absent. Venus may once have had oceans; solar ultraviolet light split the water and its hydrogen escaped to space, recorded today in the atmosphere’s extreme deuterium enrichment.',
+          },
+        ],
+      },
+      {
+        id: 'magnetosphere',
+        title: 'Magnetosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Venus has no internal dynamo — its slow rotation and possibly stagnant core produce no global magnetic field. Instead, the solar wind interacts directly with the upper atmosphere, inducing a weak, comet-like magnetotail.',
+          },
+        ],
+      },
+      { id: 'moons', title: 'Moons', blocks: [{ type: 'p', text: 'Venus has no moons. Any early satellite was likely lost to tidal decay or a catastrophic impact.' }, { type: 'moons' }] },
+      {
+        id: 'exploration',
+        title: 'Exploration',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Venus was the first planet visited (Mariner 2, 1962) and first landed on: the Soviet Venera 7 transmitted from the surface in 1970, and Venera 9 returned the first surface photos in 1975 — each lander surviving barely an hour. NASA’s Magellan radar-mapped 98% of the planet in the early 1990s.',
+          },
+          {
+            type: 'p',
+            text:
+              'JAXA’s Akatsuki studied the atmosphere from orbit through the 2010s–2020s, and a new wave — NASA’s DAVINCI and VERITAS and ESA’s EnVision — is slated for the 2030s.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'On Venus the Sun rises in the west and sets in the east — the consequence of its retrograde spin.' },
+          { type: 'p', text: 'It may “snow” metal on Venus: galena and bismuthinite vaporised in lowland heat appear to condense as reflective frost on mountaintops.' },
+          { type: 'p', text: 'Venus transits the Sun in pairs eight years apart, then not again for over a century; the next pair arrives in 2117 and 2125.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Earth ───────────────────────────────────────────────────────────────
+  earth: {
+    summary:
+      'Earth is the largest of the four rocky planets and, as far as we know, the only world in the universe that harbours life. Liquid-water oceans cover 71% of its surface, plate tectonics constantly renews its crust, and a strong magnetic field shelters a thin, oxygen-rich atmosphere.',
+    facts: [
+      'Earth is the only planet where water is stable as liquid, ice, and vapour at the surface — the engine of its climate.',
+      'Its atmosphere is 21% free oxygen, produced almost entirely by photosynthetic life over 2.4 billion years.',
+      'Earth is the densest planet in the solar system (5.51 g/cm³).',
+      'The planet’s rotation is slowing: days lengthen by about 1.8 milliseconds per century as the Moon drifts away.',
+      'From the timeline’s 500-year span, Earth completes exactly one orbit per year — the calibration standard for every clock, calendar, and ephemeris we have.',
+    ],
+    orbit: {
+      e: 0.0167,
+      stats: [
+        { label: 'Semi-major axis', value: '1.000', unit: 'AU' },
+        { label: 'Orbital period', value: '365.256', unit: 'days' },
+        { label: 'Eccentricity', value: '0.0167' },
+        { label: 'Inclination', value: '0.00', unit: '°' },
+        { label: 'Mean orbital speed', value: '29.8', unit: 'km/s' },
+        { label: 'Perihelion / Aphelion', value: '0.983 / 1.017', unit: 'AU' },
+      ],
+      note:
+        'The ecliptic — the reference plane of this entire model — is defined by Earth’s orbit. Perihelion currently falls in early January, which slightly moderates northern-hemisphere winters.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Mean radius', value: '6,371', unit: 'km' },
+              { label: 'Mass', value: '5.97 × 10²⁴', unit: 'kg' },
+              { label: 'Density', value: '5.51', unit: 'g/cm³' },
+              { label: 'Gravity', value: '9.81', unit: 'm/s²' },
+              { label: 'Sidereal rotation', value: '23.934', unit: 'h' },
+              { label: 'Axial tilt', value: '23.44', unit: '°' },
+              { label: 'Mean surface temp', value: '15', unit: '°C' },
+              { label: 'Ocean coverage', value: '71', unit: '%' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Earth’s 23.4° axial tilt drives the seasons; its fast spin flattens it into a slight ellipsoid, 43 km wider at the equator than pole-to-pole. The surface is uniquely two-tiered — deep ocean basins of dense basalt and buoyant granite continents — a direct fingerprint of plate tectonics.',
+          },
+        ],
+      },
+      {
+        id: 'atmosphere',
+        title: 'Atmosphere',
+        blocks: [
+          {
+            type: 'bars',
+            items: [
+              { label: 'Nitrogen', frac: 0.781, display: '78.1%' },
+              { label: 'Oxygen', frac: 0.209, display: '20.9%' },
+              { label: 'Argon', frac: 0.0093, display: '0.93%' },
+              { label: 'CO₂ & trace gases', frac: 0.0007, display: '≈ 0.07%' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'The lowest layer, the troposphere, holds nearly all weather; above it the stratospheric ozone layer absorbs harmful ultraviolet light. A modest natural greenhouse effect lifts the mean surface temperature from −18 °C to +15 °C — the margin within which liquid water, and life, persist.',
+          },
+        ],
+      },
+      {
+        id: 'composition',
+        title: 'Composition',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Earth is layered like an onion: a solid iron–nickel inner core (as hot as the Sun’s surface), a churning liquid outer core, a slowly convecting silicate mantle 2,900 km deep, and a crust thinner — proportionally — than an apple’s skin.',
+          },
+          {
+            type: 'p',
+            text:
+              'Plate tectonics continuously recycles that crust: ocean floor is nowhere older than ~200 million years, while the continents preserve rocks four billion years old.',
+          },
+        ],
+      },
+      {
+        id: 'magnetosphere',
+        title: 'Magnetosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Convection in the liquid outer core drives a strong planetary dynamo. The resulting magnetosphere deflects the solar wind around the planet, trapping charged particles in the Van Allen belts and funnelling them poleward to paint aurorae across high-latitude skies.',
+          },
+          {
+            type: 'p',
+            text:
+              'The field is restless: the magnetic poles wander tens of kilometres per year, and the geologic record shows full polarity reversals every few hundred thousand years.',
+          },
+        ],
+      },
+      {
+        id: 'moons',
+        title: 'Moons',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Earth has one natural satellite — the Moon — unusually large relative to its planet. The pair behave almost as a double planet, and lunar tides have shaped everything from Earth’s day length to, possibly, the emergence of life in tidal pools.',
+          },
+          { type: 'moons' },
+        ],
+      },
+      {
+        id: 'exploration',
+        title: 'Exploration',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Earth is the most closely observed planet of all: thousands of satellites monitor its weather, oceans, ice, gravity, and magnetic field continuously. The 1968 Earthrise photograph from Apollo 8 and Voyager 1’s 1990 “Pale Blue Dot” reframed how humanity sees its own world.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Earth is the only planet not named after a Greek or Roman deity.' },
+          { type: 'p', text: 'Owing to the equatorial bulge, the summit of Ecuador’s Chimborazo — not Everest — is the point farthest from Earth’s centre.' },
+          { type: 'p', text: 'A day was only ~19 hours long a billion years ago; the Moon’s tides have been slowing our spin ever since.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Mars ────────────────────────────────────────────────────────────────
+  mars: {
+    summary:
+      'Mars, the Red Planet, is a cold desert world half Earth’s size whose rust-coloured surface preserves dry riverbeds, lake floors, and minerals that only form in water. It is the most explored planet beyond Earth and the prime target in the search for past life.',
+    facts: [
+      'Olympus Mons is the tallest volcano in the solar system — 21.9 km high, nearly three times Everest.',
+      'Valles Marineris stretches over 4,000 km, a canyon system that would span the continental United States.',
+      'A Martian day (a “sol”) is 24 hours 39 minutes — the most Earth-like day of any planet.',
+      'Three billion years ago Mars had rivers, deltas, and lakes; Perseverance is sampling one such ancient lakebed today.',
+      'Its two tiny moons, Phobos and Deimos, are likely captured asteroids — and Phobos is spiralling slowly inward to its doom.',
+    ],
+    orbit: {
+      e: 0.0934,
+      stats: [
+        { label: 'Semi-major axis', value: '1.524', unit: 'AU' },
+        { label: 'Orbital period', value: '687.0', unit: 'days' },
+        { label: 'Eccentricity', value: '0.0934' },
+        { label: 'Inclination', value: '1.85', unit: '°' },
+        { label: 'Mean orbital speed', value: '24.1', unit: 'km/s' },
+        { label: 'Perihelion / Aphelion', value: '1.38 / 1.67', unit: 'AU' },
+      ],
+      note:
+        'Mars’s noticeably eccentric orbit makes southern-hemisphere summers short and hot, northern ones long and mild — and drives the planet-encircling dust storms that flare near perihelion.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Mean radius', value: '3,389.5', unit: 'km' },
+              { label: 'Mass', value: '6.42 × 10²³', unit: 'kg' },
+              { label: 'Density', value: '3.93', unit: 'g/cm³' },
+              { label: 'Gravity', value: '3.71', unit: 'm/s²' },
+              { label: 'Sidereal rotation', value: '24.62', unit: 'h' },
+              { label: 'Axial tilt', value: '25.19', unit: '°' },
+              { label: 'Mean surface temp', value: '−63', unit: '°C' },
+              { label: 'Surface pressure', value: '6.1', unit: 'mbar' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Mars wears two faces: smooth volcanic lowlands blanket the north while ancient cratered highlands rise in the south. Seasonal polar caps of CO₂ frost grow and retreat over permanent water-ice caps holding enough water to flood the planet metres deep.',
+          },
+        ],
+      },
+      {
+        id: 'atmosphere',
+        title: 'Atmosphere',
+        blocks: [
+          {
+            type: 'bars',
+            items: [
+              { label: 'Carbon dioxide', frac: 0.951, display: '95.1%' },
+              { label: 'Nitrogen', frac: 0.028, display: '2.8%' },
+              { label: 'Argon', frac: 0.02, display: '2.0%' },
+              { label: 'O₂, CO & traces', frac: 0.002, display: '≈ 0.2%' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'The air is less than 1% as thick as Earth’s — too thin for liquid water to persist, though morning frosts, water-ice clouds, and whirling dust devils are daily weather. Global dust storms can occasionally shroud the entire planet for months.',
+          },
+        ],
+      },
+      {
+        id: 'composition',
+        title: 'Composition',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'InSight’s seismometer gave Mars its first interior map: a surprisingly large liquid iron–sulphur core ~1,830 km in radius, a single-plate lithosphere, and a crust 24–72 km thick. The famous red colour is simply iron oxide — rust — coating a basaltic surface.',
+          },
+          {
+            type: 'p',
+            text:
+              'Orbiters have found clays, sulphates, and carbonates across the ancient terrains — minerals that require sustained liquid water, mapping out where a warmer, wetter Mars once was.',
+          },
+        ],
+      },
+      {
+        id: 'magnetosphere',
+        title: 'Magnetosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Mars lost its global magnetic field over 3.5 billion years ago when its core dynamo shut down; only patches of magnetised ancient crust remain. Without that shield, the solar wind stripped away most of the atmosphere — a process NASA’s MAVEN orbiter still measures today, at a rate of a few kilograms per second.',
+          },
+        ],
+      },
+      { id: 'moons', title: 'Moons', blocks: [{ type: 'p', text: 'Mars has two small, dark, potato-shaped moons discovered by Asaph Hall in 1877.' }, { type: 'moons' }] },
+      {
+        id: 'exploration',
+        title: 'Exploration',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Mariner 4 returned the first close-up pictures in 1965; Viking 1 and 2 landed in 1976. Since Pathfinder’s 1997 airbag landing, an unbroken chain of rovers — Sojourner, Spirit, Opportunity, Curiosity, Perseverance, and China’s Zhurong — has driven over 100 km of Martian ground.',
+          },
+          {
+            type: 'p',
+            text:
+              'In 2021 the Ingenuity helicopter made the first powered flight on another planet, ultimately logging 72 flights. Perseverance is caching samples for a planned Mars Sample Return, the next great leap in the search for past life.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Sunsets on Mars are blue: fine dust scatters red light away from the Sun’s disk, leaving a cool blue glow around it.' },
+          { type: 'p', text: 'Pieces of Mars are already on Earth — over 200 meteorites blasted off the planet by ancient impacts have been recovered.' },
+          { type: 'p', text: 'In ~50 million years Phobos will either crash into Mars or shred into a ring around it.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Jupiter ─────────────────────────────────────────────────────────────
+  jupiter: {
+    summary:
+      'Jupiter is the giant of the solar system — more than twice as massive as all the other planets combined. A striped ball of hydrogen and helium with no solid surface, it rules a miniature planetary system of nearly a hundred moons, four of them worlds in their own right.',
+    facts: [
+      'Jupiter’s mass is 318 Earths; its gravity has shaped the architecture of the whole solar system, from the asteroid belt to comet orbits.',
+      'The Great Red Spot is a storm wider than Earth that has raged for at least 190 years — and possibly over 350.',
+      'A day on Jupiter lasts just 9.9 hours, the shortest of any planet, flattening it visibly at the poles.',
+      'Its magnetic field is ~20,000 times stronger than Earth’s, wrapped in radiation belts lethal to unshielded electronics.',
+      'Jupiter radiates more heat than it receives from the Sun, still slowly shrinking and cooling from its formation.',
+    ],
+    orbit: {
+      e: 0.0489,
+      stats: [
+        { label: 'Semi-major axis', value: '5.204', unit: 'AU' },
+        { label: 'Orbital period', value: '11.86', unit: 'yr' },
+        { label: 'Eccentricity', value: '0.0489' },
+        { label: 'Inclination', value: '1.30', unit: '°' },
+        { label: 'Mean orbital speed', value: '13.1', unit: 'km/s' },
+        { label: 'Perihelion / Aphelion', value: '4.95 / 5.46', unit: 'AU' },
+      ],
+      note:
+        'Jupiter and the Sun orbit a barycentre that lies just outside the solar surface — the only planet massive enough to manage that. Two swarms of Trojan asteroids share its orbit, 60° ahead and behind.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Equatorial radius', value: '71,492', unit: 'km' },
+              { label: 'Mass', value: '1.90 × 10²⁷', unit: 'kg' },
+              { label: 'Density', value: '1.33', unit: 'g/cm³' },
+              { label: 'Gravity (1 bar)', value: '24.8', unit: 'm/s²' },
+              { label: 'Rotation', value: '9.925', unit: 'h' },
+              { label: 'Axial tilt', value: '3.13', unit: '°' },
+              { label: 'Cloud-top temp', value: '−110', unit: '°C' },
+              { label: 'Known moons', value: '95+' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'The visible “surface” is weather: ammonia clouds drawn into pale zones and dark belts by jet streams running hundreds of km/h in alternating directions. Juno revealed that these jets extend ~3,000 km deep, and that cyclones cluster in geometric patterns around both poles.',
+          },
+        ],
+      },
+      {
+        id: 'atmosphere',
+        title: 'Atmosphere',
+        blocks: [
+          {
+            type: 'bars',
+            items: [
+              { label: 'Hydrogen', frac: 0.898, display: '89.8%' },
+              { label: 'Helium', frac: 0.102, display: '10.2%' },
+              { label: 'Methane, ammonia, water', frac: 0.003, display: 'traces' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Three cloud decks — ammonia ice, ammonium hydrosulphide, and water — paint the planet’s palette; trace chemistry tinted by sunlight supplies the reds and browns. Lightning storms flash across the belts with bolts far more energetic than Earth’s.',
+          },
+        ],
+      },
+      {
+        id: 'composition',
+        title: 'Composition',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Beneath the clouds, hydrogen is squeezed into a liquid, and below ~80,000 bar into liquid metallic hydrogen — an electrically conducting ocean tens of thousands of kilometres deep. Juno’s gravity data point to a “fuzzy” core: heavy elements diluted through the inner third of the planet rather than a discrete ball.',
+          },
+          {
+            type: 'p',
+            text:
+              'Had Jupiter gathered about 80 times more mass, it could have ignited hydrogen fusion and become a star; as it is, it is a planet of decidedly stellar composition.',
+          },
+        ],
+      },
+      {
+        id: 'magnetosphere',
+        title: 'Magnetosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Jupiter’s magnetosphere is the largest structure in the solar system — if it glowed visibly, it would span several full Moons in Earth’s sky, and its magnetotail reaches beyond Saturn’s orbit. Volcanic gas from Io feeds a plasma torus that powers permanent polar aurorae larger than Earth itself.',
+          },
+          {
+            type: 'stats',
+            items: [
+              { label: 'Field strength (equator)', value: '4.17', unit: 'gauss' },
+              { label: 'vs. Earth’s field', value: '≈ 20,000', unit: '×' },
+              { label: 'Magnetotail length', value: '> 6', unit: 'AU' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'moons',
+        title: 'Moons',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Galileo’s 1610 discovery of the four great moons — the first bodies seen orbiting something other than Earth — helped end geocentrism. Today 95+ moons are catalogued; the four Galileans below hold most of the system’s mass and its scientific intrigue.',
+          },
+          { type: 'moons' },
+        ],
+      },
+      {
+        id: 'exploration',
+        title: 'Exploration',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Pioneers 10/11 and Voyagers 1/2 flew past in the 1970s; Galileo orbited from 1995 to 2003 and dropped a probe into the clouds; Juno has orbited since 2016, peering beneath them. Europa Clipper (launched 2024) and ESA’s JUICE are en route to the icy moons now.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Jupiter acts as the solar system’s vacuum cleaner: its gravity captured comet Shoemaker–Levy 9, whose 1994 impacts left Earth-sized scars in the clouds.' },
+          { type: 'p', text: 'You couldn’t land on Jupiter — descending, you’d simply be crushed and dissolved into ever-hotter, denser fluid.' },
+          { type: 'p', text: 'Despite its size, Jupiter spins so fast that a point on its equator moves at 12.6 km/s.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Saturn ──────────────────────────────────────────────────────────────
+  saturn: {
+    summary:
+      'Saturn is the jewel of the solar system: a gas giant encircled by a dazzling system of icy rings a quarter-million kilometres wide yet, in places, barely ten metres thick. It is the least dense planet — lighter than water — and hosts the solar system’s most Earth-like moon, Titan.',
+    facts: [
+      'Saturn’s rings are 99% water ice, spanning 282,000 km but averaging only ~10 metres in thickness.',
+      'Its bulk density is 0.69 g/cm³ — Saturn would float in a big enough bathtub.',
+      'Winds at the equator reach 1,800 km/h, among the fastest in the solar system.',
+      'A bizarre, stable hexagonal jet stream — wider than two Earths — caps the north pole.',
+      'With 146 confirmed moons, Saturn has the largest known retinue of any planet.',
+    ],
+    orbit: {
+      e: 0.0565,
+      stats: [
+        { label: 'Semi-major axis', value: '9.573', unit: 'AU' },
+        { label: 'Orbital period', value: '29.45', unit: 'yr' },
+        { label: 'Eccentricity', value: '0.0565' },
+        { label: 'Inclination', value: '2.49', unit: '°' },
+        { label: 'Mean orbital speed', value: '9.68', unit: 'km/s' },
+        { label: 'Perihelion / Aphelion', value: '9.04 / 10.12', unit: 'AU' },
+      ],
+      note:
+        'Saturn’s 29-year orbit combined with its 26.7° tilt means the rings open and close from Earth’s viewpoint on a ~15-year cycle — vanishing edge-on, as they did for Galileo in 1612, to his great confusion.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Equatorial radius', value: '60,268', unit: 'km' },
+              { label: 'Mass', value: '5.68 × 10²⁶', unit: 'kg' },
+              { label: 'Density', value: '0.69', unit: 'g/cm³' },
+              { label: 'Gravity (1 bar)', value: '10.4', unit: 'm/s²' },
+              { label: 'Rotation', value: '10.66', unit: 'h' },
+              { label: 'Axial tilt', value: '26.73', unit: '°' },
+              { label: 'Cloud-top temp', value: '−140', unit: '°C' },
+              { label: 'Known moons', value: '146' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Saturn’s fast spin and low density make it the most flattened planet — nearly 10% wider at the equator than through the poles. A high haze mutes its bands into soft gold, punctuated every few decades by planet-circling “Great White Spot” storms.',
+          },
+        ],
+      },
+      {
+        id: 'atmosphere',
+        title: 'Atmosphere',
+        blocks: [
+          {
+            type: 'bars',
+            items: [
+              { label: 'Hydrogen', frac: 0.963, display: '96.3%' },
+              { label: 'Helium', frac: 0.0325, display: '3.25%' },
+              { label: 'Methane, ammonia & traces', frac: 0.005, display: '≈ 0.5%' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Saturn radiates about twice the energy it receives from the Sun. Part of that warmth is thought to come from “helium rain” — droplets of helium condensing and falling through the metallic hydrogen interior, releasing gravitational energy as they sink.',
+          },
+        ],
+      },
+      {
+        id: 'composition',
+        title: 'Composition',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Structurally Saturn is Jupiter’s lighter sibling: molecular hydrogen giving way to metallic hydrogen around a diffuse core of rock and ice of roughly 10–20 Earth masses. Cassini’s final orbits, threading between planet and rings, showed the core too is “fuzzy”, blurred outward through much of the interior.',
+          },
+          {
+            type: 'h',
+            text: 'The rings',
+          },
+          {
+            type: 'p',
+            text:
+              'The main rings (D, C, B, A, F) are countless icy particles from dust grains to house-sized boulders, herded by moonlets and resonances into gaps, waves, and braids. Cassini weighed them at about 40% the mass of the moon Mimas — surprisingly light, hinting they may be only 10–100 million years old.',
+          },
+        ],
+      },
+      {
+        id: 'magnetosphere',
+        title: 'Magnetosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Saturn’s magnetic field is unique: almost perfectly aligned with its rotation axis (offset < 0.01°), which by dynamo theory shouldn’t be possible — a puzzle Cassini left unsolved. The magnetosphere is fed by water vapour erupting from Enceladus, whose plume coats the other moons in ice dust.',
+          },
+        ],
+      },
+      {
+        id: 'moons',
+        title: 'Moons',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Saturn’s family spans giant Titan, geyser-moon Enceladus, two-faced Iapetus, and scores of shepherd moonlets embedded in the rings themselves. The eight largest in this model are below.',
+          },
+          { type: 'moons' },
+        ],
+      },
+      {
+        id: 'exploration',
+        title: 'Exploration',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Pioneer 11 (1979) and the Voyagers (1980–81) gave first close looks; then Cassini–Huygens orbited for 13 years (2004–2017), landing Huygens on Titan — the most distant touchdown ever — and ending in a deliberate plunge into Saturn itself. NASA’s Dragonfly rotorcraft will return to Titan in the 2030s.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Saturn is the most distant planet easily visible to the naked eye — every ancient civilisation knew it, none knew of its rings.' },
+          { type: 'p', text: 'The rings rain up to ~10 tonnes of icy material into Saturn every second; on that budget they could vanish within a few hundred million years.' },
+          { type: 'p', text: 'Cassini’s “Grand Finale” dives found the gap between planet and rings almost dust-free — a lucky emptiness that let the spacecraft survive 22 crossings.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Uranus ──────────────────────────────────────────────────────────────
+  uranus: {
+    summary:
+      'Uranus is the tipped-over ice giant: it orbits the Sun rolling on its side, its poles taking turns pointing almost straight at the Sun through an 84-year orbit. A bland aquamarine face hides the coldest atmosphere of any planet and a strangely lopsided magnetic field.',
+    facts: [
+      'Uranus’s axis is tilted 97.8° — each pole gets 42 years of continuous sunlight followed by 42 years of darkness.',
+      'It is the coldest planet, with cloud tops as low as −224 °C, despite Neptune lying much farther out.',
+      'Uranus was the first planet discovered with a telescope — by William Herschel in 1781, doubling the known size of the solar system overnight.',
+      'Its 13 narrow, charcoal-dark rings were found by accident in 1977, when they blinked a background star.',
+      'All 28 known moons are named after characters from Shakespeare and Alexander Pope.',
+    ],
+    orbit: {
+      e: 0.0457,
+      stats: [
+        { label: 'Semi-major axis', value: '19.19', unit: 'AU' },
+        { label: 'Orbital period', value: '84.02', unit: 'yr' },
+        { label: 'Eccentricity', value: '0.0457' },
+        { label: 'Inclination', value: '0.77', unit: '°' },
+        { label: 'Mean orbital speed', value: '6.80', unit: 'km/s' },
+        { label: 'Perihelion / Aphelion', value: '18.3 / 20.1', unit: 'AU' },
+      ],
+      note:
+        'Slight discrepancies in Uranus’s orbital motion — visible over decades of tracking — led directly to the mathematical prediction and 1846 discovery of Neptune.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Equatorial radius', value: '25,559', unit: 'km' },
+              { label: 'Mass', value: '8.68 × 10²⁵', unit: 'kg' },
+              { label: 'Density', value: '1.27', unit: 'g/cm³' },
+              { label: 'Gravity (1 bar)', value: '8.87', unit: 'm/s²' },
+              { label: 'Rotation', value: '−17.24', unit: 'h' },
+              { label: 'Axial tilt', value: '97.77', unit: '°' },
+              { label: 'Cloud-top temp', value: '−195', unit: '°C' },
+              { label: 'Known moons', value: '28' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'The extreme tilt is probably the scar of one or more Earth-sized impacts during formation. When Voyager 2 flew past in 1986 Uranus appeared featureless; modern telescopes watching its slow seasons now catch bright storms and polar hoods emerging as sunlight returns to each hemisphere.',
+          },
+        ],
+      },
+      {
+        id: 'atmosphere',
+        title: 'Atmosphere',
+        blocks: [
+          {
+            type: 'bars',
+            items: [
+              { label: 'Hydrogen', frac: 0.825, display: '82.5%' },
+              { label: 'Helium', frac: 0.152, display: '15.2%' },
+              { label: 'Methane', frac: 0.023, display: '2.3%' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Methane absorbs red light, giving Uranus its pale cyan colour. Deeper down, clouds of hydrogen sulphide lend the air a rotten-egg scent. Unusually, Uranus radiates almost no excess internal heat — perhaps another legacy of the great collision.',
+          },
+        ],
+      },
+      {
+        id: 'composition',
+        title: 'Composition',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              '“Ice giant” means most of Uranus is a hot, dense fluid of water, methane, and ammonia — “ices” in astronomers’ vocabulary — wrapped around a small rocky core, all beneath a hydrogen–helium envelope. Interior pressures may squeeze carbon into literal diamond rain.',
+          },
+        ],
+      },
+      {
+        id: 'magnetosphere',
+        title: 'Magnetosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'The magnetic field is tilted 59° from the spin axis and offset from the planet’s centre by a third of its radius — likely generated in a thin conducting shell of ionic water rather than a deep core. As Uranus rotates, the lopsided magnetosphere tumbles end over end, opening and closing to the solar wind daily.',
+          },
+        ],
+      },
+      {
+        id: 'moons',
+        title: 'Moons',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'The five major moons below are dark, icy worlds; Miranda’s chaotic cliffs and racetrack-shaped coronae make it one of the strangest bodies known. Several of the moons may hide subsurface oceans — a key question for a future Uranus orbiter.',
+          },
+          { type: 'moons' },
+        ],
+      },
+      {
+        id: 'exploration',
+        title: 'Exploration',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Voyager 2 remains the only spacecraft ever to visit, spending six hours close to the planet on 24 January 1986 — discovering 11 moons, two rings, and the off-kilter magnetic field. The 2023 US decadal survey ranked a dedicated Uranus Orbiter and Probe as the top-priority flagship mission of the coming decade.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Herschel wanted to name the new planet “Georgium Sidus” after King George III; continental astronomers politely declined.' },
+          { type: 'p', text: 'Summer at a Uranian pole means the Sun circling the zenith for four decades — followed by a 42-year polar night.' },
+          { type: 'p', text: 'Uranus had been seen and recorded at least 17 times before 1781 — always mistaken for a star.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Neptune ─────────────────────────────────────────────────────────────
+  neptune: {
+    summary:
+      'Neptune is the outermost planet: a deep-blue ice giant discovered not by telescope sweeps but by mathematics, from its gravitational tugs on Uranus. Despite receiving barely a thousandth of Earth’s sunlight, it hosts the fastest winds ever measured on any world.',
+    facts: [
+      'Neptune was found in 1846 within 1° of Le Verrier’s predicted position — the greatest triumph of celestial mechanics.',
+      'Supersonic winds near 2,100 km/h tear westward around its equator.',
+      'One Neptunian year is 165 Earth years; it completed its first full orbit since discovery only in 2011.',
+      'Its great moon Triton orbits backwards — almost certainly a captured Kuiper Belt dwarf planet.',
+      'Neptune radiates 2.6 times the energy it receives from the Sun, powering its violent weather from within.',
+    ],
+    orbit: {
+      e: 0.0113,
+      stats: [
+        { label: 'Semi-major axis', value: '30.07', unit: 'AU' },
+        { label: 'Orbital period', value: '164.8', unit: 'yr' },
+        { label: 'Eccentricity', value: '0.0113' },
+        { label: 'Inclination', value: '1.77', unit: '°' },
+        { label: 'Mean orbital speed', value: '5.43', unit: 'km/s' },
+        { label: 'Perihelion / Aphelion', value: '29.8 / 30.3', unit: 'AU' },
+      ],
+      note:
+        'Neptune gravitationally shepherds the Kuiper Belt: Pluto and thousands of other “plutinos” are locked in a 3:2 resonance, orbiting twice for every three Neptune orbits — which is why Pluto can cross Neptune’s orbit yet never collide.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Equatorial radius', value: '24,764', unit: 'km' },
+              { label: 'Mass', value: '1.02 × 10²⁶', unit: 'kg' },
+              { label: 'Density', value: '1.64', unit: 'g/cm³' },
+              { label: 'Gravity (1 bar)', value: '11.15', unit: 'm/s²' },
+              { label: 'Rotation', value: '16.11', unit: 'h' },
+              { label: 'Axial tilt', value: '28.32', unit: '°' },
+              { label: 'Cloud-top temp', value: '−200', unit: '°C' },
+              { label: 'Known moons', value: '16' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Voyager 2 found a churning atmosphere: the Earth-sized Great Dark Spot (gone by the time Hubble looked, with new spots appearing since), bright methane cirrus racing at high altitude, and the dark, fast “Scooter” cloud. Neptune is the windiest world we know.',
+          },
+        ],
+      },
+      {
+        id: 'atmosphere',
+        title: 'Atmosphere',
+        blocks: [
+          {
+            type: 'bars',
+            items: [
+              { label: 'Hydrogen', frac: 0.80, display: '80%' },
+              { label: 'Helium', frac: 0.19, display: '19%' },
+              { label: 'Methane', frac: 0.015, display: '1.5%' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Methane alone doesn’t fully explain Neptune’s saturated blue — some unknown atmospheric chemistry deepens it compared to pale Uranus. With so little sunlight, the ferocious weather must be driven largely by heat leaking from the interior.',
+          },
+        ],
+      },
+      {
+        id: 'composition',
+        title: 'Composition',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Like Uranus, Neptune is mostly a superheated fluid mantle of water, ammonia, and methane over a rocky core of about one Earth mass. Laboratory experiments suggest that at mantle depths, methane decomposes and carbon may precipitate downward as diamond rain.',
+          },
+        ],
+      },
+      {
+        id: 'magnetosphere',
+        title: 'Magnetosphere',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Neptune’s field, like Uranus’s, is dramatically tilted (47°) and offset from the planet’s centre — evidence that thin-shell dynamos are the ice-giant norm. The magnetosphere wobbles wildly with each 16-hour rotation.',
+          },
+        ],
+      },
+      {
+        id: 'moons',
+        title: 'Moons',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Triton utterly dominates the system — its capture probably destroyed or ejected Neptune’s original moons, leaving today’s inner moonlets and distant stragglers. Nereid, found in 1949, follows one of the most eccentric moon orbits known.',
+          },
+          { type: 'moons' },
+        ],
+      },
+      {
+        id: 'exploration',
+        title: 'Exploration',
+        blocks: [
+          {
+            type: 'p',
+            text:
+              'Only Voyager 2 has visited, skimming 4,950 km over the north pole on 25 August 1989 — the closest approach of its entire Grand Tour — before dipping past Triton and out of the planetary system forever. Concepts for a Neptune–Triton orbiter remain high on scientists’ wish lists.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Galileo sketched Neptune in 1612 while observing Jupiter — 234 years before its discovery — but recorded it as a fixed star.' },
+          { type: 'p', text: 'Neptune’s faint rings are clumpy: the Adams ring’s arcs (named Liberté, Égalité, Fraternité and Courage) should smear out, yet moonlet Galatea holds them in place.' },
+          { type: 'p', text: 'Sunlight at Neptune is 900 times dimmer than at Earth — high noon looks like deep twilight.' },
+        ],
+      },
+    ],
+  },
+};
