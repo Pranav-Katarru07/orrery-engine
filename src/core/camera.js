@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { clamp, easeInOutQuint } from '../consts.js';
 
 const UP = new THREE.Vector3(0, 0, 1); // ecliptic north
+const HOME_POS = new THREE.Vector3(0, -1200, 520); // default wide system view
 
 // Camera rig with three modes:
 //   free    — WASD/QE + drag-look free flight, speed scales with altitude
@@ -11,7 +12,7 @@ const UP = new THREE.Vector3(0, 0, 1); // ecliptic north
 export class CameraRig {
   constructor(camera, dom) {
     this.camera = camera;
-    this.pos = new THREE.Vector3(0, -1200, 520); // virtual world position (units)
+    this.pos = HOME_POS.clone(); // virtual world position (units)
     this.quat = new THREE.Quaternion();
     this.mode = 'free';
 
@@ -138,11 +139,47 @@ export class CameraRig {
     this.onModeChange?.(this.mode, null);
   }
 
+  // Cinematic flight back to the default wide system view (free mode).
+  recenterHome() {
+    const dist = HOME_POS.distanceTo(this.pos);
+    if (dist < 1) return; // already home
+    this._transit = {
+      home: true,
+      t0: performance.now(),
+      dur: clamp(1.5 + dist / 1500, 1.5, 2.5) * 1000,
+      fromPos: this.pos.clone(),
+      fromQuat: this.quat.clone(),
+    };
+    this.mode = 'transit-home';
+    this.focusId = null;
+    this.onModeChange?.(this.mode, null);
+  }
+
   update(dt, getBody) {
     if (this.mode === 'transit') this._updateTransit(getBody);
+    else if (this.mode === 'transit-home') this._updateTransitHome();
     else if (this.mode === 'focus') this._updateFocus(getBody);
     else this._updateFree(dt);
     this.camera.quaternion.copy(this.quat);
+  }
+
+  _updateTransitHome() {
+    const tr = this._transit;
+    const t = clamp((performance.now() - tr.t0) / tr.dur, 0, 1);
+    const e = easeInOutQuint(t);
+    this.pos.lerpVectors(tr.fromPos, HOME_POS, e);
+
+    // gaze settles on the Sun ahead of arrival
+    const gaze = clamp(t * 1.7, 0, 1);
+    const m = new THREE.Matrix4().lookAt(this.pos, new THREE.Vector3(0, 0, 0), UP);
+    const want = new THREE.Quaternion().setFromRotationMatrix(m);
+    this.quat.slerpQuaternions(tr.fromQuat, want, easeInOutQuint(gaze));
+
+    if (t >= 1) {
+      this.mode = 'free';
+      this._transit = null;
+      this.onModeChange?.(this.mode, null);
+    }
   }
 
   _updateTransit(getBody) {

@@ -67,7 +67,7 @@ export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen 
     <div class="h-row"><span class="kbd">Click</span> focus a body</div>
     <div class="h-row"><span class="kbd">Drag</span> orbit / look around</div>
     <div class="h-row"><span class="kbd">W A S D</span> fly &nbsp;·&nbsp; <span class="kbd">Scroll</span> zoom</div>
-    <div class="h-row"><span class="kbd">Esc</span> release focus</div>
+    <div class="h-row"><span class="kbd">R</span> recenter &nbsp;·&nbsp; <span class="kbd">Esc</span> release focus</div>
   `;
   ui.appendChild(hints);
 
