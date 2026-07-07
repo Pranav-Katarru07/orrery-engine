@@ -91,12 +91,14 @@ export class Timeline {
       this._wasPlaying = clock.playing;
       clock.playing = false;
       this.scrubber.setPointerCapture(ev.pointerId);
+      el.classList.add('scrubbing'); // keep the bar expanded mid-drag
       scrubTo(ev);
     });
     this.scrubber.addEventListener('pointermove', (ev) => scrubbing && scrubTo(ev));
     this.scrubber.addEventListener('pointerup', () => {
       scrubbing = false;
       clock.playing = this._wasPlaying;
+      el.classList.remove('scrubbing');
     });
 
     clock.onChange(() => this.render());

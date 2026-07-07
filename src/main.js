@@ -162,6 +162,10 @@ window.addEventListener('keydown', (e) => {
     search.open();
   } else if (e.key === 'Escape' && !search.isOpen) {
     deselect();
+  } else if (e.code === 'KeyR' && !typing && !search.isOpen) {
+    // recenter: re-frame the focused body, or fly home when free
+    if (rig.focusId) rig.flyTo(rig.focusId, getBodyForRig);
+    else rig.recenterHome();
   }
 });
 
