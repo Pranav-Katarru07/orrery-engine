@@ -1,6 +1,27 @@
 import { TIME_MAX } from '../consts.js';
 import { CROSS_SECTIONS, MAGNETOSPHERES } from '../data/visuals.js';
 import { buildCrossSection, buildMagnetosphere } from './viz.js';
+import { galleryFor } from '../data/gallery.js';
+import { referenceFor } from '../data/references.js';
+import { GLOSSARY, GLOSSARY_TERMS } from '../data/glossary.js';
+import { openLightbox } from './lightbox.js';
+
+// Wrap the first occurrence of each glossary term (longest-first) in a marked
+// span for the definition popover. Skips text already inside a tag by only
+// operating on plain-text runs. `used` de-dupes across a whole panel render.
+function linkifyGlossary(text, used) {
+  let out = text;
+  for (const term of GLOSSARY_TERMS) {
+    if (used.has(term)) continue;
+    const re = new RegExp(`(?<![\\w-])(${escapeRe(term)})(?![\\w-])`, 'i');
+    if (re.test(out)) {
+      out = out.replace(re, `<span class="glossary-term" data-term="${term}">$1</span>`);
+      used.add(term);
+    }
+  }
+  return out;
+}
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Info panel: Overview / Orbit / <deep-dive> tabs, subtab pills under the
 // deep-dive tab, accent re-skinned per body via the CSS accent variables.
@@ -71,6 +92,55 @@ export class Panel {
     this.$subtabs = el.querySelector('.subtab-row');
     this.$body = el.querySelector('.panel-body');
     el.querySelector('.panel-close').addEventListener('click', () => this.onClose());
+    this._initGlossaryPop();
+  }
+
+  // One shared definition card, positioned under whichever glossary term the
+  // pointer is over. Delegated so it survives every panel re-render.
+  _initGlossaryPop() {
+    const pop = document.createElement('div');
+    pop.className = 'glossary-pop glass';
+    document.getElementById('ui').appendChild(pop);
+    this.$pop = pop;
+
+    const show = (term) => {
+      const def = GLOSSARY[term.toLowerCase()];
+      if (!def) return;
+      pop.innerHTML = `<div class="gp-term">${term}</div><div class="gp-def">${def}</div>`;
+      pop.classList.add('visible');
+    };
+    const place = (el) => {
+      const r = el.getBoundingClientRect();
+      pop.style.visibility = 'hidden';
+      pop.classList.add('visible');
+      const pw = pop.offsetWidth, ph = pop.offsetHeight;
+      let left = r.left + r.width / 2 - pw / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - pw - 12));
+      let top = r.top - ph - 10;
+      if (top < 12) top = r.bottom + 10; // flip below if no room above
+      pop.style.left = `${left}px`;
+      pop.style.top = `${top}px`;
+      pop.style.visibility = '';
+    };
+    const hide = () => pop.classList.remove('visible');
+
+    this.$body.addEventListener('pointerover', (e) => {
+      const t = e.target.closest('.glossary-term');
+      if (!t) return;
+      show(t.dataset.term);
+      place(t);
+    });
+    this.$body.addEventListener('pointerout', (e) => {
+      if (e.target.closest('.glossary-term')) hide();
+    });
+    this.$body.addEventListener('scroll', hide, { passive: true });
+    // tap toggle on touch
+    this.$body.addEventListener('click', (e) => {
+      const t = e.target.closest('.glossary-term');
+      if (!t) return hide();
+      if (pop.classList.contains('visible')) hide();
+      else { show(t.dataset.term); place(t); }
+    });
   }
 
   get isOpen() {
@@ -132,13 +202,48 @@ export class Panel {
     const facts = (c.facts ?? [])
       .map((f, i) => `<div class="fact"><span class="n">${String(i + 1).padStart(2, '0')}</span><span class="t">${f}</span></div>`)
       .join('');
+    const ref = referenceFor(this.def.id);
+    const used = new Set();
+    const detail = ref
+      ? `<h4>In Depth</h4>${ref.detail.map((p) => `<p>${linkifyGlossary(p, used)}</p>`).join('')}${this._sourceBlock(ref.sources)}`
+      : '';
     this.$body.innerHTML = `
       <p>${c.summary}</p>
       ${this.def.type === 'comet' ? this._flybyStats() : ''}
       <h4>Top 5 Facts</h4>
       <div class="fact-list">${facts}</div>
+      ${detail}
     `;
     this._wireJumpButton();
+    this._mountGalleryStrip(); // appended last, sits at the bottom of Overview
+  }
+
+  _sourceBlock(sources) {
+    if (!sources?.length) return '';
+    const links = sources
+      .map((s) => `<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`)
+      .join('<span class="src-sep">·</span>');
+    return `<div class="panel-sources"><span class="src-label">Sources</span>${links}</div>`;
+  }
+
+  // Horizontal 2-tall thumbnail strip; clicking a thumb opens the lightbox.
+  _mountGalleryStrip() {
+    const imgs = galleryFor(this.def.id);
+    if (!imgs.length) return;
+    const strip = document.createElement('div');
+    strip.className = 'gallery-strip-wrap';
+    strip.innerHTML = `<h4>Gallery</h4><div class="gallery-strip"></div>`;
+    const row = strip.querySelector('.gallery-strip');
+    const MAX = 8;
+    imgs.slice(0, MAX).forEach((im, i) => {
+      const cell = document.createElement('button');
+      cell.className = 'strip-cell';
+      const overflow = i === MAX - 1 && imgs.length > MAX ? `<span class="strip-more">+${imgs.length - MAX + 1}</span>` : '';
+      cell.innerHTML = `<img src="${im.file}" alt="${im.title || ''}" loading="lazy" />${overflow}`;
+      cell.addEventListener('click', () => openLightbox(imgs, i, this.def.accent));
+      row.appendChild(cell);
+    });
+    this.$body.appendChild(strip);
   }
 
   // Live next-perihelion readout for comets, computed from the sim clock.
