@@ -188,6 +188,7 @@ const chrome = buildChrome(ui, {
   onGalleryOpen: () => gallery.open(),
   onMeasureToggle: () => measure.toggle(),
   onTourOpen: () => tour.toggleMenu(),
+  onPhoto: () => captureFrame(),
 });
 measure.onChange = (on) => chrome.setMeasureActive(on);
 
@@ -200,6 +201,50 @@ const tour = new TourPlayer(ui, TOURS, {
   },
   onEnd: () => deselect(),
 });
+
+// ── Photo mode: supersampled snapshot of the canvas (UI lives in the DOM,
+// so the capture is inherently clean — no hiding needed) ────────────────
+const flash = document.createElement('div');
+flash.className = 'photo-flash';
+ui.appendChild(flash);
+
+let capturing = false;
+async function captureFrame() {
+  if (capturing) return;
+  capturing = true;
+  const { renderer, composer } = stage;
+  const basePR = renderer.getPixelRatio();
+  const w = window.innerWidth, h = window.innerHeight;
+  // double the pixel ratio, capped so neither axis exceeds 4096 device px
+  const hiPR = Math.min(basePR * 2, 4096 / Math.max(w, h));
+  let blobPromise;
+  try {
+    renderer.setPixelRatio(hiPR);
+    composer.setPixelRatio(hiPR);
+    composer.setSize(w, h);
+    composer.render();
+    // toBlob snapshots the bitmap at call time, so it's safe to restore
+    // the render size before the encoding finishes
+    blobPromise = new Promise((res) => renderer.domElement.toBlob(res, 'image/png'));
+  } finally {
+    renderer.setPixelRatio(basePR);
+    composer.setPixelRatio(basePR);
+    composer.setSize(w, h);
+  }
+  flash.classList.remove('go');
+  void flash.offsetWidth; // restart the animation
+  flash.classList.add('go');
+  const blob = await blobPromise;
+  capturing = false;
+  if (!blob) return;
+  const subject = rig.focusId ?? selectedId ?? 'view';
+  const date = new Date(clock.ms).toISOString().slice(0, 10);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `orrery-${subject}-${date}.png`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
 
 // true heliocentric position in AU — the scene lies in compressed scale
 // mode, so measurements always read from the ephemeris instead
@@ -224,6 +269,8 @@ window.addEventListener('keydown', (e) => {
     measure.toggle();
   } else if (e.code === 'KeyT' && !typing && !search.isOpen) {
     tour.toggleMenu();
+  } else if (e.code === 'KeyP' && !typing && !search.isOpen) {
+    captureFrame();
   } else if (e.key === 'Escape' && measure.armed) {
     measure.disarm();
   } else if (e.key === 'Escape' && gallery.isOpen) {
