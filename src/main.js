@@ -209,6 +209,15 @@ window.addEventListener('keydown', (e) => {
 // ── Picking (mesh raycast for close bodies; labels handle the far field) ─
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
+
+// shift+drag pan anchor: the body surface point under the cursor (GL space)
+rig.getPanAnchor = (nx, ny) => {
+  pointer.set(nx, ny);
+  raycaster.setFromCamera(pointer, stage.camera);
+  const hits = raycaster.intersectObjects(bodies.pickMeshes(), false);
+  return hits.length ? hits[0].point : null;
+};
+
 stage.renderer.domElement.addEventListener('click', (e) => {
   if (rig.consumeClickIsDrag()) return;
   pointer.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
