@@ -18,6 +18,7 @@ import { buildChrome } from './ui/chrome.js';
 import { Timeline } from './ui/timeline.js';
 import { Search } from './ui/search.js';
 import { Gallery } from './ui/gallery.js';
+import { Measure } from './ui/measure.js';
 import { Panel } from './ui/panel.js';
 import { setAccent } from './ui/theme.js';
 import { getContent } from './data/content/index.js';
@@ -126,6 +127,7 @@ const panel = new Panel(ui, {
 function select(id) {
   const def = defOf(id);
   if (!def || hidden.has(id)) return;
+  if (measure.pick(id, def.name)) return; // armed measure tool eats the click
   selectedId = id;
   setAccent(def.accent);
   orbits.setSelection(id);
@@ -164,7 +166,8 @@ function isMoonShown(def) {
 
 // ── UI chrome ───────────────────────────────────────────────────────────
 const settings = { labels: true, orbits: true, constellations: false, scaleMode: 'compressed' };
-buildChrome(ui, {
+const measure = new Measure(stage.scene, ui);
+const chrome = buildChrome(ui, {
   settings,
   onToggle: (k, v) => {
     if (k === 'labels') labels.setVisible(v);
@@ -174,7 +177,13 @@ buildChrome(ui, {
   onScaleMode: (mode) => scale.setMode(mode),
   onSearchOpen: () => search.open(),
   onGalleryOpen: () => gallery.open(),
+  onMeasureToggle: () => measure.toggle(),
 });
+measure.onChange = (on) => chrome.setMeasureActive(on);
+
+// true heliocentric position in AU — the scene lies in compressed scale
+// mode, so measurements always read from the ephemeris instead
+const auOf = (id) => helioAU.get(id) ?? missions.position(id, clock.ms);
 new Timeline(ui, clock);
 
 const search = new Search(
@@ -191,6 +200,10 @@ window.addEventListener('keydown', (e) => {
     search.open();
   } else if (e.code === 'KeyG' && !typing && !search.isOpen) {
     gallery.toggle();
+  } else if (e.code === 'KeyM' && !typing && !search.isOpen) {
+    measure.toggle();
+  } else if (e.key === 'Escape' && measure.armed) {
+    measure.disarm();
   } else if (e.key === 'Escape' && gallery.isOpen) {
     gallery.close();
   } else if (e.key === 'Escape' && !search.isOpen) {
@@ -259,6 +272,7 @@ function frame(now) {
     bodyRadiusUnits,
     isMoonShown
   );
+  measure.update(camPos, (id) => (hidden.has(id) ? null : world.get(id)), auOf, stage.camera);
 
   stage.composer.render();
   requestAnimationFrame(frame);
