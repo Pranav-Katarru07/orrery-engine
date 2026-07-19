@@ -1107,4 +1107,400 @@ export const MOON_CONTENT = {
       },
     ],
   },
+
+  // ── Jupiter (inner) ──
+  amalthea: {
+    summary:
+      'Amalthea is Jupiter’s battered inner moon — a deep-red, potato-shaped rubble pile circling less than two Jupiter radii above the cloud tops. It is the reddest object known in the solar system, painted by sulphur blasted off Io.',
+    facts: [
+      'Amalthea radiates slightly more heat than it receives from the Sun, warmed by Jupiter’s tidal flexing and its intense radiation belt.',
+      'It was the last moon discovered by eye at a telescope — Edward Barnard, 1892; every moon since has been found photographically.',
+      'It orbits Jupiter in under 12 hours, deep inside Io’s orbit.',
+      'Its density is below that of water ice — a loosely-bound pile of rubble that would fly apart if it spun much faster.',
+      'The crater Pan is 100 km across — on a moon only ~250 km long.',
+    ],
+    orbit: { e: 0.003, stats: orbitStats('181,366', '11.95 hours', 0.003, 0.37) },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Dimensions', value: '250 × 146 × 128', unit: 'km' },
+              { label: 'Density', value: '0.86', unit: 'g/cm³' },
+              { label: 'Albedo', value: '0.09' },
+              { label: 'Discovered', value: '1892 (Barnard)' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'From Amalthea’s surface, Jupiter would fill a staggering 46° of sky — ninety times wider than our full Moon. Galileo imaged it repeatedly during its Jupiter tour; its icy-rubble interior suggests it formed farther out and was captured inward.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Amalthea was the nymph (or goat) who nursed the infant Zeus in Greek myth — a fitting name for the moon nestled closest to Jupiter’s great moons.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Saturn (irregulars) ──
+  hyperion: {
+    summary:
+      'Hyperion is the solar system’s tumbling sponge: the largest known irregularly-shaped moon, with a porosity so high that impactors punch in rather than splash out, leaving a surface of deep, sharp-rimmed cells. It is the only moon known to rotate chaotically — its day is literally unpredictable.',
+    facts: [
+      'Hyperion’s rotation is formally chaotic: its spin axis and rate change unpredictably, driven by its odd shape, eccentric orbit, and Titan’s tugs.',
+      'It is over 40% empty space — a rubble sponge whose craters stay deep and crisp because debris compresses instead of ejecting.',
+      'It orbits in a 4:3 resonance with Titan — four Titan orbits for every three of Hyperion’s.',
+      'During Cassini’s 2005 flyby, Hyperion zapped the spacecraft with a burst of static electricity — the first detected charged surface of a moon.',
+      'No fixed day length exists — the "120 h" in this model is a stand-in for something nature refuses to pin down.',
+    ],
+    orbit: { e: 0.123, stats: orbitStats('1,481,010', '21.28 days', 0.123, 0.43) },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Dimensions', value: '360 × 266 × 205', unit: 'km' },
+              { label: 'Density', value: '0.54', unit: 'g/cm³' },
+              { label: 'Porosity', value: '> 40', unit: '%' },
+              { label: 'Albedo', value: '0.3' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Hyperion may be a fragment of a larger moon shattered by an ancient impact — which would explain both its shape and the debris-strewn chaos of its spin.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Because its rotation is chaotic, you cannot predict where on Hyperion the Sun will rise — not even in principle, no matter how good your measurements.' },
+        ],
+      },
+    ],
+  },
+
+  phoebe: {
+    summary:
+      'Phoebe is Saturn’s great outsider: a dark, retrograde moon orbiting four times farther out than any major moon, almost certainly a captured Centaur from the Kuiper Belt. Its shed dust forms Saturn’s colossal outer ring and paints one face of Iapetus black.',
+    facts: [
+      'Phoebe orbits backwards, 12.9 million km from Saturn — the fingerprint of gravitational capture.',
+      'It is likely a captured Kuiper Belt object: round-ish, ice-rich, and chemically more like Pluto than like Saturn’s native moons.',
+      'The Phoebe ring, discovered in 2009, spans over 10 million km — large enough to hold thousands of Saturns; it is fed by dust off Phoebe.',
+      'That dust drifts inward and coats the leading face of Iapetus — solving a 300-year-old mystery.',
+      'Cassini flew past in June 2004, eleven days before Saturn arrival — the mission’s first scientific encounter.',
+    ],
+    orbit: {
+      e: 0.156,
+      stats: orbitStats('12,947,780', '550.3 days (retrograde)', 0.156, '175 (retrograde)'),
+      note: 'Phoebe orbits against the spin of Saturn and all its major moons — captured bodies keep whatever direction they arrived with.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Mean radius', value: '106.5', unit: 'km' },
+              { label: 'Density', value: '1.64', unit: 'g/cm³' },
+              { label: 'Rotation', value: '9.27', unit: 'h' },
+              { label: 'Albedo', value: '0.06' },
+            ],
+          },
+          {
+            type: 'p',
+            text:
+              'Phoebe is dense for its size and roughly spherical — evidence it was born round in the early Kuiper Belt, migrated inward, and was snared by Saturn. Unlike the tidally-locked regulars, it still spins on its own 9.3-hour clock.',
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'If Phoebe is a captured Centaur, then Cassini visited a Kuiper Belt object a decade before New Horizons reached Pluto — Saturn just did the delivery.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Neptune ──
+  proteus: {
+    summary:
+      'Proteus is Neptune’s second-largest moon and one of the darkest objects in the solar system — yet it went undiscovered until Voyager 2 arrived in 1989, hidden in Neptune’s glare. It sits right at the size limit where gravity begins to force a body round, and lost the battle.',
+    facts: [
+      'Proteus is about as large as a body can be while remaining irregular — any bigger and its own gravity would have pulled it into a sphere.',
+      'Though larger than Nereid, it was found 40 years later: it hugs Neptune so closely that its glare hid it from every telescope.',
+      'Its surface reflects just ~10% of sunlight — as dark as soot.',
+      'The crater Pharos is ~230 km wide, over half the moon’s diameter.',
+      'Like most of Neptune’s inner moons, it likely re-formed from debris after Triton’s violent capture.',
+    ],
+    orbit: { e: 0.0005, stats: orbitStats('117,646', '1.12 days', 0.0005, 0.08) },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Mean radius', value: '210', unit: 'km' },
+              { label: 'Dimensions', value: '424 × 390 × 396', unit: 'km' },
+              { label: 'Albedo', value: '0.10' },
+              { label: 'Discovered', value: '1989 (Voyager 2)' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Proteus was the shape-shifting old man of the sea in Greek myth — apt for a moon caught mid-way between lumpy and round.' },
+        ],
+      },
+    ],
+  },
+
+  nereid: {
+    summary:
+      'Nereid rides the wildest orbit of any known moon: an eccentricity of 0.75 swings it from 1.4 million to 9.7 million kilometres from Neptune every 360 days. It is most likely an original moon flung onto this rollercoaster when Triton crashed the party.',
+    facts: [
+      'Nereid’s orbital eccentricity (0.749) is the highest of any moon in the solar system — select it and admire the stretched ellipse.',
+      'Its distance from Neptune varies sevenfold over each orbit.',
+      'It was discovered in 1949 by Gerard Kuiper — the man the Kuiper Belt is named after.',
+      'The leading theory: Nereid is a native moon scattered onto its wild orbit by the capture of Triton.',
+      'Despite 30 years of study, its rotation was only pinned down (11.5 h) in 2016 — by the Kepler space telescope, moonlighting from planet-hunting.',
+    ],
+    orbit: {
+      e: 0.749,
+      stats: orbitStats('5,513,820', '360.1 days', 0.749, 7.23),
+      note: 'The most eccentric moon orbit known — its periapsis-to-apoapsis swing is visible at a glance in the 3D view when Neptune is focused.',
+    },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Mean radius', value: '≈ 170', unit: 'km' },
+              { label: 'Rotation', value: '11.52', unit: 'h' },
+              { label: 'Albedo', value: '0.16' },
+              { label: 'Discovered', value: '1949 (Kuiper)' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Voyager 2 could only photograph Nereid from 4.7 million km — it remains a fuzzy blob awaiting a future Neptune orbiter.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Eris ──
+  dysnomia: {
+    summary:
+      'Dysnomia is the moon of the dwarf planet Eris and — at roughly 700 km across — one of the largest moons of any dwarf planet. Recent ALMA measurements show it has tidally locked its massive parent, making Eris–Dysnomia a slow-waltzing far cousin of Pluto–Charon.',
+    facts: [
+      'Dysnomia is large enough that it has tidally locked Eris itself: both now rotate in step with their 15.8-day mutual orbit.',
+      'At ~700 km in diameter, it rivals mid-sized moons of Saturn — yet orbits a world 96 AU from the Sun.',
+      'It is remarkably dark (albedo ~0.05), a stark contrast to brilliant, frost-covered Eris.',
+      'Its discovery in 2005 is what allowed Eris to be weighed — revealing it as more massive than Pluto.',
+      'Dysnomia, goddess of lawlessness, was Eris’s mythological daughter — and a wink at Lucy Lawless, TV’s Xena.',
+    ],
+    orbit: { e: 0.006, stats: orbitStats('37,273', '15.79 days', 0.006, '—') },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Diameter', value: '≈ 700', unit: 'km' },
+              { label: 'Albedo', value: '≈ 0.05' },
+              { label: 'Rotation', value: 'synchronous' },
+              { label: 'Discovered', value: '2005 (Keck AO)' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Dysnomia is so dark and Eris so bright that, despite being over half Eris’s diameter, it reflects less than 1/60th as much light.' },
+        ],
+      },
+    ],
+  },
+
+  // ── Pluto's small moons ──
+  styx: {
+    summary:
+      'Styx is the smallest and innermost of Pluto’s four little moons — a 16-km sliver of bright ice found by Hubble in 2012 while scouting collision hazards for New Horizons. Like its siblings, it tumbles chaotically in the shifting gravity of the Pluto–Charon binary.',
+    facts: [
+      'Styx was discovered less than three years before New Horizons flew past it.',
+      'It tumbles chaotically — orbiting a binary means the gravitational field never repeats.',
+      'Its bright, icy surface suggests it is a shard from the giant impact that made Charon.',
+      'It completes an orbit in 20.2 days, in a near-resonant chain with Nix, Kerberos, and Hydra.',
+      'Styx was the mythological river between Earth and the underworld — the boundary of Pluto’s realm.',
+    ],
+    orbit: { e: 0.006, stats: orbitStats('42,656', '20.16 days', 0.006, 0.8) },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Dimensions', value: '16 × 9 × 8', unit: 'km' },
+              { label: 'Rotation', value: 'chaotic (~3.2 d)' },
+              { label: 'Discovered', value: '2012 (HST)' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'All four small moons orbit in near 1:3:4:5:6 rhythm with Charon — the fossil of a resonant dance from their debris-disc birth.' },
+        ],
+      },
+    ],
+  },
+
+  nix: {
+    summary:
+      'Nix is one of Pluto’s two mid-sized moons, discovered with Hydra in 2005. New Horizons caught it in surprising detail: a bright, elongated chunk of water ice with a mysterious rust-red splotch — probably the scar of a recent impact.',
+    facts: [
+      'New Horizons revealed a reddish region on Nix, likely exposed material from a crater — the only colour patch on any of the small moons.',
+      'Nix spins chaotically; Hubble data showed its brightness varying unpredictably.',
+      'Its surface is unexpectedly bright, suggesting relatively clean water ice.',
+      'It shares its 2005 discovery announcement with Hydra — found while planning the New Horizons encounter.',
+      'Nix (Nyx), goddess of night, was the mother of Charon in Greek myth.',
+    ],
+    orbit: { e: 0.002, stats: orbitStats('48,694', '24.85 days', 0.002, 0.13) },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Dimensions', value: '50 × 35 × 33', unit: 'km' },
+              { label: 'Rotation', value: 'chaotic (~1.8 d)' },
+              { label: 'Albedo', value: '≈ 0.56' },
+              { label: 'Discovered', value: '2005 (HST)' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'If you stood on Nix, Pluto and Charon would wheel overhead in a slow double-planet ballet — while your own sky tumbled unpredictably.' },
+        ],
+      },
+    ],
+  },
+
+  kerberos: {
+    summary:
+      'Kerberos is Pluto’s second-smallest moon, a faint double-lobed body discovered in 2011. Astronomers expected it to be coal-dark — its faintness suggested so — but New Horizons found bright ice, deepening the puzzle of how it formed.',
+    facts: [
+      'Kerberos is two lobes stuck together — a miniature contact binary, like Arrokoth.',
+      'Predicted to be dark as charcoal, it turned out bright as dirty snow — its faintness comes from tiny size, not dark ground.',
+      'It orbits between Nix and Hydra, in the debris-disc resonance chain.',
+      'The name honours the three-headed hound guarding Pluto’s underworld.',
+      'It was the last of Pluto’s moons to be imaged in detail — downlinked from New Horizons in late 2015.',
+    ],
+    orbit: { e: 0.003, stats: orbitStats('57,783', '32.17 days', 0.003, 0.4) },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Dimensions', value: '19 × 10 × 9', unit: 'km' },
+              { label: 'Rotation', value: 'chaotic (~5.3 d)' },
+              { label: 'Discovered', value: '2011 (HST)' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'The IAU spelling is Kerberos (Greek) rather than Cerberus (Latin) — the Latin name was already taken by an asteroid.' },
+        ],
+      },
+    ],
+  },
+
+  hydra: {
+    summary:
+      'Hydra is the outermost of Pluto’s moons — an elongated, brilliantly icy body about 50 km long, discovered with Nix in 2005. It spins once every 10 hours, the fastest rotation in the Pluto system, hinting at an especially chaotic tumbling history.',
+    facts: [
+      'Hydra’s surface is nearly pure water ice — among the cleanest ice surfaces New Horizons measured anywhere.',
+      'It rotates in ~10.3 hours despite a 38-day orbit — wildly unlocked, like all of Pluto’s small moons.',
+      'It marks the outer edge of the known Pluto system, 65,000 km out.',
+      'Its name honours the many-headed serpent of the underworld — and, quietly, the H in Hubble, which found it.',
+      'With Nix, its 2005 discovery helped promote the New Horizons mission from “Pluto flyby” to “Pluto-system explorer.”',
+    ],
+    orbit: { e: 0.006, stats: orbitStats('64,738', '38.20 days', 0.006, 0.24) },
+    tabs: [
+      {
+        id: 'physical',
+        title: 'Physical',
+        blocks: [
+          {
+            type: 'stats',
+            items: [
+              { label: 'Dimensions', value: '65 × 45 × 25', unit: 'km' },
+              { label: 'Rotation', value: '10.3', unit: 'h' },
+              { label: 'Albedo', value: '≈ 0.83' },
+              { label: 'Discovered', value: '2005 (HST)' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'funfacts',
+        title: 'Fun Facts',
+        blocks: [
+          { type: 'p', text: 'Nix and Hydra’s initials — N and H — are a deliberate tip of the hat to New Horizons, the mission that prompted their discovery.' },
+        ],
+      },
+    ],
+  },
 };

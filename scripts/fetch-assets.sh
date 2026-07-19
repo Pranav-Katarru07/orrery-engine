@@ -44,7 +44,8 @@ fetch "$SSS/2k_stars_milky_way.jpg"  "$TEX/milky_way.jpg"
 STEL="https://raw.githubusercontent.com/Stellarium/stellarium/master/textures"
 for name in pluto charon io europa ganymede callisto titan enceladus mimas \
             rhea iapetus dione tethys triton titania oberon ariel umbriel \
-            miranda phobos deimos vesta; do
+            miranda phobos deimos vesta \
+            amalthea hyperion phoebe proteus; do
   fetch "$STEL/$name.png" "$TEX/$name.png"
 done
 
