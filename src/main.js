@@ -17,6 +17,7 @@ import { Labels } from './render/labels.js';
 import { buildChrome } from './ui/chrome.js';
 import { Timeline } from './ui/timeline.js';
 import { Search } from './ui/search.js';
+import { Gallery } from './ui/gallery.js';
 import { Panel } from './ui/panel.js';
 import { setAccent } from './ui/theme.js';
 import { getContent } from './data/content/index.js';
@@ -172,6 +173,7 @@ buildChrome(ui, {
   },
   onScaleMode: (mode) => scale.setMode(mode),
   onSearchOpen: () => search.open(),
+  onGalleryOpen: () => gallery.open(),
 });
 new Timeline(ui, clock);
 
@@ -180,12 +182,17 @@ const search = new Search(
   ALL_TARGETS.map((t) => ({ id: t.id, name: t.name, type: t.type, aliases: t.aliases, accent: t.accent })),
   select
 );
+const gallery = new Gallery(ui, select);
 
 window.addEventListener('keydown', (e) => {
   const typing = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
   if (e.code === 'Space' && !typing && !search.isOpen) {
     e.preventDefault();
     search.open();
+  } else if (e.code === 'KeyG' && !typing && !search.isOpen) {
+    gallery.toggle();
+  } else if (e.key === 'Escape' && gallery.isOpen) {
+    gallery.close();
   } else if (e.key === 'Escape' && !search.isOpen) {
     deselect();
   } else if (e.code === 'KeyR' && !typing && !search.isOpen) {
