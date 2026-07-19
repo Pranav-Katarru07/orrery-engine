@@ -876,8 +876,10 @@ html, body {
 .photo-flash {
   position: fixed; inset: 0;
   background: #fff; opacity: 0;
-  pointer-events: none; z-index: 50;
+  z-index: 50;
 }
+/* the #ui > * pointer-events reset must not make the flash a click shield */
+#ui > .photo-flash { pointer-events: none; }
 .photo-flash.go { animation: photo-flash 420ms ease-out; }
 @keyframes photo-flash {
   0% { opacity: 0.85; }
