@@ -8,9 +8,10 @@ const icon = {
   search: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4.4"/><path d="M10.4 10.4L14 14"/></svg>`,
   gallery: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="2.5" width="5" height="5" rx="1"/><rect x="9" y="2.5" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>`,
   measure: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.5 13.5L13.5 2.5"/><path d="M5 11l1.2 1.2M7.5 8.5l1.2 1.2M10 6l1.2 1.2"/></svg>`,
+  tours: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13.5c4-1 1.5-4.5 5-5.5s5.5-3 4.5-5.5"/><circle cx="3" cy="13.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12.5" cy="2.5" r="1.3" fill="currentColor" stroke="none"/></svg>`,
 };
 
-export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen, onGalleryOpen, onMeasureToggle }) {
+export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen, onGalleryOpen, onMeasureToggle, onTourOpen }) {
   const bar = document.createElement('div');
   bar.className = 'topbar';
   bar.innerHTML = `
@@ -29,6 +30,7 @@ export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen,
       </div>
       <div class="ctl-divider"></div>
       <button class="ctl-btn" data-k="gallery">${icon.gallery}Gallery</button>
+      <button class="ctl-btn" data-k="tours">${icon.tours}Tours</button>
       <button class="ctl-btn" data-k="measure">${icon.measure}Measure</button>
       <button class="ctl-btn" data-k="search">${icon.search}Search <span class="kbd">Space</span></button>
     </div>
@@ -49,6 +51,10 @@ export function buildChrome(ui, { settings, onToggle, onScaleMode, onSearchOpen,
     }
     if (k === 'measure') {
       b.addEventListener('click', onMeasureToggle);
+      continue;
+    }
+    if (k === 'tours') {
+      b.addEventListener('click', onTourOpen);
       continue;
     }
     b.classList.toggle('active', settings[k]);
