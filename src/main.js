@@ -19,6 +19,8 @@ import { Timeline } from './ui/timeline.js';
 import { Search } from './ui/search.js';
 import { Gallery } from './ui/gallery.js';
 import { Measure } from './ui/measure.js';
+import { TourPlayer } from './ui/tour.js';
+import { TOURS } from './data/tours.js';
 import { Panel } from './ui/panel.js';
 import { setAccent } from './ui/theme.js';
 import { getContent } from './data/content/index.js';
@@ -124,11 +126,10 @@ const panel = new Panel(ui, {
   onJumpToDate: (ms) => clock.set(ms),
 });
 
-function select(id) {
+// accent + orbit/label emphasis + camera flight, without opening the panel
+// (tours narrate from their own card; clicking the body still opens it)
+function highlight(id) {
   const def = defOf(id);
-  if (!def || hidden.has(id)) return;
-  if (measure.pick(id, def.name)) return; // armed measure tool eats the click
-  selectedId = id;
   setAccent(def.accent);
   orbits.setSelection(id);
   orbits.setFocusParent(def.type === 'moon' ? def.parent : childrenOf(id).length ? id : null);
@@ -137,6 +138,14 @@ function select(id) {
   // comets are framed from far outside their coma so the tails read as a
   // vista; everything else gets the close three-quarter portrait
   rig.flyTo(id, getBodyForRig, def.type === 'comet' ? 700 : 4.6, def.type === 'comet');
+}
+
+function select(id) {
+  const def = defOf(id);
+  if (!def || hidden.has(id)) return;
+  if (measure.pick(id, def.name)) return; // armed measure tool eats the click
+  selectedId = id;
+  highlight(id);
 
   const parentDef = def.parent && def.parent !== 'sun' ? CATALOG.get(def.parent) : null;
   const moons = childrenOf(id).map((m) => ({ id: m.id, name: m.name, radiusKm: m.radiusKm }));
@@ -178,8 +187,19 @@ const chrome = buildChrome(ui, {
   onSearchOpen: () => search.open(),
   onGalleryOpen: () => gallery.open(),
   onMeasureToggle: () => measure.toggle(),
+  onTourOpen: () => tour.toggleMenu(),
 });
 measure.onChange = (on) => chrome.setMeasureActive(on);
+
+const tour = new TourPlayer(ui, TOURS, {
+  onStop: (id) => {
+    if (hidden.has(id)) return; // e.g. a mission stop before its launch date
+    selectedId = id;
+    panel.close();
+    highlight(id);
+  },
+  onEnd: () => deselect(),
+});
 
 // true heliocentric position in AU — the scene lies in compressed scale
 // mode, so measurements always read from the ephemeris instead
@@ -202,10 +222,18 @@ window.addEventListener('keydown', (e) => {
     gallery.toggle();
   } else if (e.code === 'KeyM' && !typing && !search.isOpen) {
     measure.toggle();
+  } else if (e.code === 'KeyT' && !typing && !search.isOpen) {
+    tour.toggleMenu();
   } else if (e.key === 'Escape' && measure.armed) {
     measure.disarm();
   } else if (e.key === 'Escape' && gallery.isOpen) {
     gallery.close();
+  } else if (e.key === 'Escape' && tour.isMenuOpen) {
+    tour.closeMenu();
+  } else if (e.key === 'Escape' && tour.isActive) {
+    // first Esc closes a panel the user opened mid-tour; next one ends the tour
+    if (panel.isOpen) panel.close();
+    else tour.end();
   } else if (e.key === 'Escape' && !search.isOpen) {
     deselect();
   } else if (e.code === 'KeyR' && !typing && !search.isOpen) {
