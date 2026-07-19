@@ -5,10 +5,10 @@ node_modules/
 dist/
 dist-ssr/
 
-# Fetched assets — regenerate with `npm run fetch-assets`
-public/textures/
-public/data/
-# NOTE: public/gallery/ is committed (real NASA imagery, curated) — not ignored
+# NOTE: public/textures/, public/data/, and public/gallery/ are all
+# committed (NASA/Stellarium/d3-celestial assets + curated imagery) —
+# nothing under public/ is ignored. Regenerate with `npm run fetch-assets`
+# and `npm run fetch-gallery` if they ever go missing.
 
 # Vite
 .vite/
