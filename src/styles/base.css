@@ -871,3 +871,15 @@ html, body {
 .tour-btn:disabled { opacity: 0.35; cursor: default; }
 .tour-btn.primary { color: var(--text); border-color: var(--border-strong); }
 .tour-menu[hidden], .tour-card[hidden] { display: none; }
+
+/* ── Photo mode ───────────────────────────────────────────────────────── */
+.photo-flash {
+  position: fixed; inset: 0;
+  background: #fff; opacity: 0;
+  pointer-events: none; z-index: 50;
+}
+.photo-flash.go { animation: photo-flash 420ms ease-out; }
+@keyframes photo-flash {
+  0% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
