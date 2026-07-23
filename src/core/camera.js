@@ -24,6 +24,9 @@ export class CameraRig {
     this._keys = new Set();
     this._dragging = false;
     this._lastPointer = { x: 0, y: 0 };
+    this._pan = null; // active shift-drag: { world, normal }
+    this._getBody = null; // last getBody fn, stashed by update()
+    this.getPanAnchor = null; // injected: (ndcX, ndcY) → GL-space point | null
     this.onModeChange = null; // callback(mode, focusId)
 
     this._lookAtWorld(new THREE.Vector3(0, 0, 0));
@@ -37,6 +40,9 @@ export class CameraRig {
       this._dragMoved = 0;
       this._lastPointer = { x: e.clientX, y: e.clientY };
       dom.setPointerCapture(e.pointerId);
+      // shift+drag = CAD-style pan; the gesture latches here, so letting
+      // go of shift mid-drag keeps panning until the button lifts
+      if (e.shiftKey && (this.mode === 'free' || this.mode === 'focus')) this._startPan(e);
     });
     dom.addEventListener('pointermove', (e) => {
       if (!this._dragging) return;
@@ -44,10 +50,14 @@ export class CameraRig {
       const dy = e.clientY - this._lastPointer.y;
       this._lastPointer = { x: e.clientX, y: e.clientY };
       this._dragMoved += Math.abs(dx) + Math.abs(dy);
-      if (this.mode === 'focus') this._orbitBy(dx, dy);
+      if (this._pan) this._panMove(e);
+      else if (this.mode === 'focus') this._orbitBy(dx, dy);
       else if (this.mode === 'free') this._lookBy(dx, dy);
     });
-    dom.addEventListener('pointerup', () => (this._dragging = false));
+    dom.addEventListener('pointerup', () => {
+      this._dragging = false;
+      this._pan = null;
+    });
     dom.addEventListener('wheel', (e) => {
       e.preventDefault();
       const k = Math.exp(e.deltaY * 0.0012);
@@ -90,6 +100,52 @@ export class CameraRig {
     const right = new THREE.Vector3(1, 0, 0).applyQuaternion(this.quat);
     const pitch = new THREE.Quaternion().setFromAxisAngle(right, -dy * 0.0028);
     this.quat.premultiply(yaw).premultiply(pitch).normalize();
+  }
+
+  _ndc(e) {
+    return {
+      x: (e.clientX / window.innerWidth) * 2 - 1,
+      y: -(e.clientY / window.innerHeight) * 2 + 1,
+    };
+  }
+
+  // Cursor ray direction in GL space. The GL camera sits at the origin
+  // (camera-relative rendering), so unprojecting yields the direction.
+  _rayDir(ndc) {
+    return new THREE.Vector3(ndc.x, ndc.y, 0.5).unproject(this.camera).normalize();
+  }
+
+  // Onshape-style pan: grab the 3D point under the cursor and keep it glued
+  // to the cursor for the whole drag. Anchors on a body surface when the
+  // cursor is over one, else on the view ray at a plausible depth.
+  _startPan(e) {
+    const ndc = this._ndc(e);
+    let anchor = this.getPanAnchor ? this.getPanAnchor(ndc.x, ndc.y) : null;
+    if (!anchor) {
+      let depth;
+      const b = this.mode === 'focus' && this._getBody ? this._getBody(this.focusId) : null;
+      if (b) depth = this.zoom * b.radius;
+      else depth = Math.max(this.pos.length() * 0.4, 1);
+      anchor = this._rayDir(ndc).multiplyScalar(depth);
+    }
+    const normal = new THREE.Vector3(0, 0, -1).applyQuaternion(this.quat);
+    // focus recomputes pos from the body every frame, so a pan has to break
+    // the follow — same feel as Onshape, and R / re-select restores framing
+    if (this.mode === 'focus') this.releaseFocus();
+    this._pan = { world: anchor.add(this.pos), normal };
+  }
+
+  _panMove(e) {
+    const dir = this._rayDir(this._ndc(e));
+    const { world, normal } = this._pan;
+    // re-derive the anchor from its world point each move: pinning stays
+    // exact over the whole gesture instead of accumulating drift
+    const anchorGL = world.clone().sub(this.pos);
+    const denom = dir.dot(normal);
+    if (Math.abs(denom) < 1e-6) return;
+    const t = anchorGL.dot(normal) / denom;
+    if (t <= 0) return;
+    this.pos.add(anchorGL.sub(dir.multiplyScalar(t)));
   }
 
   _freeSpeed() {
@@ -167,6 +223,7 @@ export class CameraRig {
   }
 
   update(dt, getBody) {
+    this._getBody = getBody;
     if (this.mode === 'transit') this._updateTransit(getBody);
     else if (this.mode === 'transit-home') this._updateTransitHome();
     else if (this.mode === 'focus') this._updateFocus(getBody);

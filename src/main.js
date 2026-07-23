@@ -18,6 +18,9 @@ import { buildChrome } from './ui/chrome.js';
 import { Timeline } from './ui/timeline.js';
 import { Search } from './ui/search.js';
 import { Gallery } from './ui/gallery.js';
+import { Measure } from './ui/measure.js';
+import { TourPlayer } from './ui/tour.js';
+import { TOURS } from './data/tours.js';
 import { Panel } from './ui/panel.js';
 import { setAccent } from './ui/theme.js';
 import { getContent } from './data/content/index.js';
@@ -123,10 +126,10 @@ const panel = new Panel(ui, {
   onJumpToDate: (ms) => clock.set(ms),
 });
 
-function select(id) {
+// accent + orbit/label emphasis + camera flight, without opening the panel
+// (tours narrate from their own card; clicking the body still opens it)
+function highlight(id) {
   const def = defOf(id);
-  if (!def || hidden.has(id)) return;
-  selectedId = id;
   setAccent(def.accent);
   orbits.setSelection(id);
   orbits.setFocusParent(def.type === 'moon' ? def.parent : childrenOf(id).length ? id : null);
@@ -135,6 +138,14 @@ function select(id) {
   // comets are framed from far outside their coma so the tails read as a
   // vista; everything else gets the close three-quarter portrait
   rig.flyTo(id, getBodyForRig, def.type === 'comet' ? 700 : 4.6, def.type === 'comet');
+}
+
+function select(id) {
+  const def = defOf(id);
+  if (!def || hidden.has(id)) return;
+  if (measure.pick(id, def.name)) return; // armed measure tool eats the click
+  selectedId = id;
+  highlight(id);
 
   const parentDef = def.parent && def.parent !== 'sun' ? CATALOG.get(def.parent) : null;
   const moons = childrenOf(id).map((m) => ({ id: m.id, name: m.name, radiusKm: m.radiusKm }));
@@ -164,7 +175,8 @@ function isMoonShown(def) {
 
 // ── UI chrome ───────────────────────────────────────────────────────────
 const settings = { labels: true, orbits: true, constellations: false, scaleMode: 'compressed' };
-buildChrome(ui, {
+const measure = new Measure(stage.scene, ui);
+const chrome = buildChrome(ui, {
   settings,
   onToggle: (k, v) => {
     if (k === 'labels') labels.setVisible(v);
@@ -174,7 +186,69 @@ buildChrome(ui, {
   onScaleMode: (mode) => scale.setMode(mode),
   onSearchOpen: () => search.open(),
   onGalleryOpen: () => gallery.open(),
+  onMeasureToggle: () => measure.toggle(),
+  onTourOpen: () => tour.toggleMenu(),
+  onPhoto: () => captureFrame(),
 });
+measure.onChange = (on) => chrome.setMeasureActive(on);
+
+const tour = new TourPlayer(ui, TOURS, {
+  onStop: (id) => {
+    if (hidden.has(id)) return; // e.g. a mission stop before its launch date
+    selectedId = id;
+    panel.close();
+    highlight(id);
+  },
+  onEnd: () => deselect(),
+});
+
+// ── Photo mode: supersampled snapshot of the canvas (UI lives in the DOM,
+// so the capture is inherently clean — no hiding needed) ────────────────
+const flash = document.createElement('div');
+flash.className = 'photo-flash';
+ui.appendChild(flash);
+
+let capturing = false;
+async function captureFrame() {
+  if (capturing) return;
+  capturing = true;
+  const { renderer, composer } = stage;
+  const basePR = renderer.getPixelRatio();
+  const w = window.innerWidth, h = window.innerHeight;
+  // double the pixel ratio, capped so neither axis exceeds 4096 device px
+  const hiPR = Math.min(basePR * 2, 4096 / Math.max(w, h));
+  let blobPromise;
+  try {
+    renderer.setPixelRatio(hiPR);
+    composer.setPixelRatio(hiPR);
+    composer.setSize(w, h);
+    composer.render();
+    // toBlob snapshots the bitmap at call time, so it's safe to restore
+    // the render size before the encoding finishes
+    blobPromise = new Promise((res) => renderer.domElement.toBlob(res, 'image/png'));
+  } finally {
+    renderer.setPixelRatio(basePR);
+    composer.setPixelRatio(basePR);
+    composer.setSize(w, h);
+  }
+  flash.classList.remove('go');
+  void flash.offsetWidth; // restart the animation
+  flash.classList.add('go');
+  const blob = await blobPromise;
+  capturing = false;
+  if (!blob) return;
+  const subject = rig.focusId ?? selectedId ?? 'view';
+  const date = new Date(clock.ms).toISOString().slice(0, 10);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `orrery-${subject}-${date}.png`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+// true heliocentric position in AU — the scene lies in compressed scale
+// mode, so measurements always read from the ephemeris instead
+const auOf = (id) => helioAU.get(id) ?? missions.position(id, clock.ms);
 new Timeline(ui, clock);
 
 const search = new Search(
@@ -191,8 +265,22 @@ window.addEventListener('keydown', (e) => {
     search.open();
   } else if (e.code === 'KeyG' && !typing && !search.isOpen) {
     gallery.toggle();
+  } else if (e.code === 'KeyM' && !typing && !search.isOpen) {
+    measure.toggle();
+  } else if (e.code === 'KeyT' && !typing && !search.isOpen) {
+    tour.toggleMenu();
+  } else if (e.code === 'KeyP' && !typing && !search.isOpen) {
+    captureFrame();
+  } else if (e.key === 'Escape' && measure.armed) {
+    measure.disarm();
   } else if (e.key === 'Escape' && gallery.isOpen) {
     gallery.close();
+  } else if (e.key === 'Escape' && tour.isMenuOpen) {
+    tour.closeMenu();
+  } else if (e.key === 'Escape' && tour.isActive) {
+    // first Esc closes a panel the user opened mid-tour; next one ends the tour
+    if (panel.isOpen) panel.close();
+    else tour.end();
   } else if (e.key === 'Escape' && !search.isOpen) {
     deselect();
   } else if (e.code === 'KeyR' && !typing && !search.isOpen) {
@@ -209,6 +297,15 @@ window.addEventListener('keydown', (e) => {
 // ── Picking (mesh raycast for close bodies; labels handle the far field) ─
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
+
+// shift+drag pan anchor: the body surface point under the cursor (GL space)
+rig.getPanAnchor = (nx, ny) => {
+  pointer.set(nx, ny);
+  raycaster.setFromCamera(pointer, stage.camera);
+  const hits = raycaster.intersectObjects(bodies.pickMeshes(), false);
+  return hits.length ? hits[0].point : null;
+};
+
 stage.renderer.domElement.addEventListener('click', (e) => {
   if (rig.consumeClickIsDrag()) return;
   pointer.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
@@ -250,6 +347,7 @@ function frame(now) {
     bodyRadiusUnits,
     isMoonShown
   );
+  measure.update(camPos, (id) => (hidden.has(id) ? null : world.get(id)), auOf, stage.camera);
 
   stage.composer.render();
   requestAnimationFrame(frame);

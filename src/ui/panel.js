@@ -187,6 +187,10 @@ export class Panel {
     this.el.classList.remove('open');
   }
 
+  get isOpen() {
+    return this.el.classList.contains('open');
+  }
+
   _render() {
     for (const b of this.$tabs.children) b.classList.toggle('active', b.dataset.tab === this.tab);
     this.$subtabs.hidden = this.tab !== 'deep' || !(this.content.tabs?.length > 1);
